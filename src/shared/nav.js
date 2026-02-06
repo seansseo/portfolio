@@ -3,14 +3,15 @@
  * @param {boolean} isLanding - true on landing page (uses #hash), false on sub-pages (uses /#hash)
  */
 export function initNav(isLanding = true) {
-  const prefix = isLanding ? '' : '/'
+  const base = import.meta.env.BASE_URL
+  const prefix = isLanding ? '' : base
 
   const nav = document.createElement('nav')
   nav.className = 'nav'
   nav.id = 'nav'
   nav.innerHTML = `
     <div class="nav__inner">
-      <a href="${prefix}" class="nav__logo">Sean Seo</a>
+      <a href="${base}" class="nav__logo">Sean Seo</a>
       <div class="nav__links" id="nav-links">
         <a href="${prefix}#projects" class="nav__link" data-section="projects">Projects</a>
         <a href="${prefix}#blog" class="nav__link" data-section="blog">Blog</a>
