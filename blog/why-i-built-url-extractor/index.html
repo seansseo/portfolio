@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The Problem: Why I Built a URL Extractor — It started on launch day, scanning a 47-page campaign brief for every URL." />
+    <title>The Problem: Why I Built a URL Extractor — Sean Seo</title>
+  </head>
+  <body>
+    <!-- Blog Header -->
+    <header class="blog-header">
+      <div class="container blog-header__content">
+        <a href="/" class="blog-header__back">&larr; Back to Home</a>
+        <div class="blog-header__meta">
+          <span>Part 1 of the URL Extractor Series</span>
+          <span>&middot;</span>
+          <span>8 min read</span>
+        </div>
+        <h1 class="blog-header__title">The Problem: Why I Built a URL Extractor</h1>
+        <p class="blog-header__subtitle">
+          It started on launch day — scanning a 47-page campaign brief for every URL, praying I didn't miss one. There had to be a better way.
+        </p>
+      </div>
+    </header>
+
+    <!-- Article Body -->
+    <article class="article">
+      <h2>Launch Day Panic</h2>
+      <p>
+        It was 6 AM on a Tuesday. The campaign was going live at 9. I had a 47-page brief open in one tab, a spreadsheet in another, and a creeping sense of dread that I'd already missed something.
+      </p>
+      <p>
+        The brief had URLs everywhere — landing pages for each segment, tracking links for each channel, A/B test variants with slightly different UTM parameters, redirect URLs wrapped inside other URLs. Some were in body text. Some were in footnotes. Some were hyperlinked behind text that said "click here" and I had to hover over each one to find the actual destination.
+      </p>
+      <p>
+        I was doing what every digital marketer does before a launch: <strong>the URL audit</strong>. Making sure every link goes where it's supposed to go. Making sure every UTM parameter is correct. Making sure nothing is broken, nothing is misspelled, and nothing is pointing to the staging environment instead of production.
+      </p>
+      <p>
+        I did this manually. Every single time. And every single time, something slipped through.
+      </p>
+
+      <h2>URLs Are the Connective Tissue</h2>
+      <p>
+        Here's something non-marketers don't realize: <strong>URLs are the most important artifact in digital marketing.</strong> They're not just links — they're the connective tissue between every piece of a campaign.
+      </p>
+      <p>
+        A single campaign might generate dozens of unique URLs. The landing page itself. Variants for paid search vs. organic vs. email vs. social. Each variant tagged with UTM parameters that tell your analytics platform where the traffic came from, what campaign it belongs to, and which specific ad or email drove the click.
+      </p>
+      <p>
+        Get a UTM parameter wrong, and your attribution data is corrupted. Your reporting says email drove 40% of conversions when it was actually paid search. Your CEO makes budget decisions based on garbage data. The campaign "worked" but nobody knows why — or worse, they think they know and they're wrong.
+      </p>
+      <p>
+        This isn't hypothetical. I've watched it happen. I've caused it to happen. A misplaced <code>utm_medium=cpc</code> where it should have been <code>utm_medium=email</code>, and suddenly two quarters of channel performance data needed to be recalculated.
+      </p>
+
+      <h2>The Spreadsheet Purgatory</h2>
+      <p>
+        The industry's answer to this problem is spreadsheets. Big, sprawling Google Sheets with columns for every UTM parameter, rows for every URL, and conditional formatting that turns red when something looks wrong.
+      </p>
+      <p>
+        I've built these spreadsheets. I've maintained them. I've watched them grow from a useful tool into a 15-tab monster that nobody trusts but everyone depends on. The process looked something like this:
+      </p>
+      <ol>
+        <li>Open the campaign brief</li>
+        <li>Ctrl+F for "http" — find the first URL</li>
+        <li>Copy it into the spreadsheet</li>
+        <li>Manually parse out the UTM parameters</li>
+        <li>Check them against the naming convention doc (another spreadsheet)</li>
+        <li>Repeat for every URL in the document</li>
+        <li>Pray you didn't miss any</li>
+        <li>Click each link to verify it resolves</li>
+        <li>Notice that three URLs have different capitalization in the campaign name parameter</li>
+        <li>Go back to step 1</li>
+      </ol>
+      <p>
+        For a mid-size campaign, this took 2–3 hours. For a large one with multiple markets and channels, it could eat an entire day. And the error rate? In my experience, <strong>manual URL audits miss 10–15% of links</strong> in any document over 10 pages. Not because people are careless — because the task is fundamentally hostile to human attention.
+      </p>
+
+      <h2>Why Existing Tools Didn't Work</h2>
+      <p>
+        I tried everything. Browser find (<code>Ctrl+F</code>) catches URLs but can't extract them — you still have to copy each one manually. Generic regex tools are powerful but require you to know regex, and the expressions for URLs are notoriously tricky. Online URL extractors exist but they're either:
+      </p>
+      <ul>
+        <li><strong>Web-based</strong> — which means pasting confidential campaign data into a random website</li>
+        <li><strong>Too simple</strong> — they find URLs but don't parse UTM parameters or handle edge cases</li>
+        <li><strong>Enterprise bloat</strong> — full campaign management platforms that cost $50K/year and require a 3-month implementation</li>
+      </ul>
+      <p>
+        None of them solved my specific problem: <em>I have a document. I need every URL in it, broken down by component, in under 30 seconds. I need it to work offline. I need it to handle messy, real-world text.</em>
+      </p>
+
+      <h2>So I Built One</h2>
+      <p>
+        The first version took a weekend. It was a Chrome extension with a text box: paste your content, click a button, get a clean list of every URL found, with UTM parameters broken out into columns.
+      </p>
+      <p>
+        It wasn't pretty. The regex was basic. But the first time I used it on a real campaign brief, it found 23 URLs in about 2 seconds. My manual pass had found 19. The four I missed? Two were in image alt text, one was in a comment bubble, and one was a tracking pixel URL buried in an HTML snippet.
+      </p>
+      <p>
+        That gap — <strong>23 vs. 19</strong> — was the moment I knew this wasn't just a convenience tool. It was a necessity.
+      </p>
+      <p>
+        I iterated on the design philosophy: <strong>zero configuration, instant results</strong>. No dropdowns to set, no modes to choose. Paste text, get URLs. The tool should be faster than the thought "I should check the URLs."
+      </p>
+
+      <h2>What I Didn't Expect</h2>
+      <p>
+        The URL Extractor was supposed to be a personal tool. A scratch-your-own-itch side project that lived in my browser and saved me a few hours a week.
+      </p>
+      <p>
+        But when I showed it to colleagues, something interesting happened. The project manager wanted it for QA checklists. The SEO specialist wanted it for audit reports. The email marketer wanted it for pre-send link verification. Everyone had a version of the same problem — <strong>too many URLs, not enough confidence they were all correct</strong>.
+      </p>
+      <p>
+        That's when I started thinking bigger. The URL problem wasn't unique to me. It was a <em>category</em> problem — a symptom of a deeper issue in how marketing teams handle data. The URLs are just the most visible piece. Underneath, there's a whole layer of data capture, validation, and structuring that most teams are doing by hand.
+      </p>
+      <p>
+        I started calling this the <strong>Data Layer</strong> — the foundation that everything else in marketing technology should be built on. Not the analytics platform, not the attribution model, not the dashboard. The layer below all of that: the raw capture of what's actually happening in your campaigns.
+      </p>
+      <p>
+        The URL Extractor is the first tool in that layer. It won't be the last.
+      </p>
+
+      <hr />
+
+      <p>
+        <strong>Next up:</strong> In Part 2, I'll dive into the technical side — how I went from a basic regex to a robust URL parser that handles the weird stuff: tracking pixels, redirect chains, encoded parameters, and URLs that technically shouldn't work but somehow do in production.
+      </p>
+    </article>
+
+    <!-- Blog CTA -->
+    <div class="blog-cta">
+      <div class="blog-cta__card">
+        <h2 class="blog-cta__title">See It in Action</h2>
+        <p class="blog-cta__text">Check out the URL Extractor project page for screenshots, tech stack details, and architecture overview.</p>
+        <div class="blog-cta__links">
+          <a href="/projects/url-extractor/" class="btn btn--primary">View the Project</a>
+          <a href="/" class="btn btn--outline">Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Series Nav -->
+    <div class="series-nav">
+      <div class="series-nav__inner">
+        <div></div>
+        <div class="series-nav__link" style="opacity:0.4;cursor:default;">
+          <span class="series-nav__label">Next in Series</span>
+          Part 2: Building the Engine (Coming Soon)
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/blog/why-i-built-url-extractor.js"></script>
+  </body>
+</html>

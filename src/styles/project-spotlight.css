@@ -1,0 +1,169 @@
+/* ─── Project Hero ─── */
+.project-hero {
+  padding: calc(80px + var(--space-4xl)) 0 var(--space-3xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 30% 0%, rgba(100, 108, 255, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.project-hero__content {
+  position: relative;
+  z-index: 1;
+}
+
+.project-hero__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2xl);
+  transition: color var(--transition);
+}
+
+.project-hero__back:hover {
+  color: var(--text-bright);
+}
+
+.project-hero__badge {
+  margin-bottom: var(--space-md);
+}
+
+.project-hero__title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  margin-bottom: var(--space-md);
+}
+
+.project-hero__subtitle {
+  font-size: 1.15rem;
+  color: var(--text);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: var(--space-2xl);
+}
+
+.project-hero__actions {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* ─── Screenshot Area ─── */
+.project-screenshot {
+  margin: var(--space-3xl) 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ─── Project Sections ─── */
+.project-section {
+  padding: var(--space-3xl) 0;
+}
+
+.project-section + .project-section {
+  border-top: var(--glass-border);
+}
+
+.project-section__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+}
+
+.project-section__text {
+  color: var(--text);
+  line-height: 1.8;
+  max-width: var(--prose-width);
+}
+
+.project-section__text p + p {
+  margin-top: var(--space-md);
+}
+
+/* ─── Tech Stack ─── */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+/* ─── Architecture Diagram ─── */
+.architecture {
+  margin-top: var(--space-2xl);
+}
+
+.architecture__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+.arch-card {
+  padding: var(--space-xl);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.arch-card__icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-md);
+}
+
+.arch-card__title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+}
+
+.arch-card__text {
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .architecture__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Project CTA ─── */
+.project-cta {
+  text-align: center;
+  padding: var(--space-4xl) 0;
+}
+
+.project-cta__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+}
+
+.project-cta__text {
+  color: var(--text);
+  margin-bottom: var(--space-2xl);
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
