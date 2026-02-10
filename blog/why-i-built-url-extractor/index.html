@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="The Problem: Why I Built a URL Extractor — It started on launch day, scanning a 47-page campaign brief for every URL." />
-    <title>The Problem: Why I Built a URL Extractor — Sean Seo</title>
+    <meta name="description" content="Why I Built a Documentation Extractor — LLMs hallucinate technical details. I needed a way to ground them in official docs, fast." />
+    <title>Why I Built a Documentation Extractor — Sean Seo</title>
+    <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
   </head>
   <body>
     <!-- Blog Header -->
@@ -13,118 +14,96 @@
       <div class="container blog-header__content">
         <a href="../../" class="blog-header__back">&larr; Back to Home</a>
         <div class="blog-header__meta">
-          <span>Part 1 of the URL Extractor Series</span>
+          <span>Feb 6, 2026</span>
           <span>&middot;</span>
-          <span>8 min read</span>
+          <span>Part 1 of the Documentation Extractor Series</span>
+          <span>&middot;</span>
+          <span>7 min read</span>
         </div>
-        <h1 class="blog-header__title">The Problem: Why I Built a URL Extractor</h1>
+        <h1 class="blog-header__title">The Problem: Why I Built a Documentation Extractor</h1>
         <p class="blog-header__subtitle">
-          It started on launch day — scanning a 47-page campaign brief for every URL, praying I didn't miss one. There had to be a better way.
+          LLMs kept hallucinating technical details. I needed a way to ground them in official documentation — but collecting the URLs was its own problem.
         </p>
       </div>
     </header>
 
     <!-- Article Body -->
     <article class="article">
-      <h2>Launch Day Panic</h2>
+      <h2>The Hallucination Problem</h2>
       <p>
-        It was 6 AM on a Tuesday. The campaign was going live at 9. I had a 47-page brief open in one tab, a spreadsheet in another, and a creeping sense of dread that I'd already missed something.
+        I was deep in a project, asking an LLM about a specific API parameter. The answer sounded authoritative — exact flag name, clear explanation, even a code example. One problem: the parameter didn't exist. The model had hallucinated it with complete confidence.
       </p>
       <p>
-        The brief had URLs everywhere — landing pages for each segment, tracking links for each channel, A/B test variants with slightly different UTM parameters, redirect URLs wrapped inside other URLs. Some were in body text. Some were in footnotes. Some were hyperlinked behind text that said "click here" and I had to hover over each one to find the actual destination.
+        This wasn't a one-off. It kept happening — with CLI flags, configuration schemas, SDK methods. The training data was either outdated or too generic. For technical work, "close enough" doesn't cut it. You need the real answer from the real documentation.
       </p>
       <p>
-        I was doing what every digital marketer does before a launch: <strong>the URL audit</strong>. Making sure every link goes where it's supposed to go. Making sure every UTM parameter is correct. Making sure nothing is broken, nothing is misspelled, and nothing is pointing to the staging environment instead of production.
+        That's when I discovered the power of <strong>grounding</strong>: feeding official documentation directly into an AI tool so it has the actual source of truth. Tools like NotebookLM made this workflow possible — upload sources, ask questions, get answers backed by real docs instead of training-data approximations.
       </p>
       <p>
-        I did this manually. Every single time. And every single time, something slipped through.
-      </p>
-
-      <h2>URLs Are the Connective Tissue</h2>
-      <p>
-        Here's something non-marketers don't realize: <strong>URLs are the most important artifact in digital marketing.</strong> They're not just links — they're the connective tissue between every piece of a campaign.
-      </p>
-      <p>
-        A single campaign might generate dozens of unique URLs. The landing page itself. Variants for paid search vs. organic vs. email vs. social. Each variant tagged with UTM parameters that tell your analytics platform where the traffic came from, what campaign it belongs to, and which specific ad or email drove the click.
-      </p>
-      <p>
-        Get a UTM parameter wrong, and your attribution data is corrupted. Your reporting says email drove 40% of conversions when it was actually paid search. Your CEO makes budget decisions based on garbage data. The campaign "worked" but nobody knows why — or worse, they think they know and they're wrong.
-      </p>
-      <p>
-        This isn't hypothetical. I've watched it happen. I've caused it to happen. A misplaced <code>utm_medium=cpc</code> where it should have been <code>utm_medium=email</code>, and suddenly two quarters of channel performance data needed to be recalculated.
+        There was just one friction point. A big one.
       </p>
 
-      <h2>The Spreadsheet Purgatory</h2>
+      <h2>The URL Collection Problem</h2>
       <p>
-        The industry's answer to this problem is spreadsheets. Big, sprawling Google Sheets with columns for every UTM parameter, rows for every URL, and conditional formatting that turns red when something looks wrong.
+        To ground an LLM in a technology's documentation, you need the URLs. And most documentation sites are massive. Google Cloud has thousands of pages. AWS documentation spans hundreds of services. Even a focused framework like Next.js has docs spread across dozens of nested paths.
       </p>
       <p>
-        I've built these spreadsheets. I've maintained them. I've watched them grow from a useful tool into a 15-tab monster that nobody trusts but everyone depends on. The process looked something like this:
+        Every time I wanted to create a new AI-powered reference guide, the process looked like this:
       </p>
       <ol>
-        <li>Open the campaign brief</li>
-        <li>Ctrl+F for "http" — find the first URL</li>
-        <li>Copy it into the spreadsheet</li>
-        <li>Manually parse out the UTM parameters</li>
-        <li>Check them against the naming convention doc (another spreadsheet)</li>
-        <li>Repeat for every URL in the document</li>
-        <li>Pray you didn't miss any</li>
-        <li>Click each link to verify it resolves</li>
-        <li>Notice that three URLs have different capitalization in the campaign name parameter</li>
-        <li>Go back to step 1</li>
+        <li>Go to the documentation site</li>
+        <li>Click around trying to find the sitemap</li>
+        <li>Open the XML in a browser tab — wall of angle brackets</li>
+        <li>Realize it's a sitemap index pointing to more sitemaps</li>
+        <li>Open each nested sitemap manually</li>
+        <li>Copy URLs one at a time, or try to parse the XML by eye</li>
+        <li>Realize half the URLs are for older API versions you don't need</li>
+        <li>Give up and just grab the top-level pages, hoping that's enough</li>
       </ol>
       <p>
-        For a mid-size campaign, this took 2–3 hours. For a large one with multiple markets and channels, it could eat an entire day. And the error rate? In my experience, <strong>manual URL audits miss 10–15% of links</strong> in any document over 10 pages. Not because people are careless — because the task is fundamentally hostile to human attention.
+        This could eat an hour or more per documentation site. And the result was always incomplete — you'd either include too much noise or miss important sections. The quality of the grounded AI depended entirely on how thorough your URL collection was, and doing it by hand guaranteed it wouldn't be thorough enough.
       </p>
 
       <h2>Why Existing Tools Didn't Work</h2>
       <p>
-        I tried everything. Browser find (<code>Ctrl+F</code>) catches URLs but can't extract them — you still have to copy each one manually. Generic regex tools are powerful but require you to know regex, and the expressions for URLs are notoriously tricky. Online URL extractors exist but they're either:
+        I looked for solutions. Sitemap validators exist but they check structure, not extract URLs. Web scrapers are overkill — I didn't need page content, just the URL list. Browser-based XML viewers show the raw sitemap but don't let you filter or copy URLs in bulk.
       </p>
-      <ul>
-        <li><strong>Web-based</strong> — which means pasting confidential campaign data into a random website</li>
-        <li><strong>Too simple</strong> — they find URLs but don't parse UTM parameters or handle edge cases</li>
-        <li><strong>Enterprise bloat</strong> — full campaign management platforms that cost $50K/year and require a 3-month implementation</li>
-      </ul>
       <p>
-        None of them solved my specific problem: <em>I have a document. I need every URL in it, broken down by component, in under 30 seconds. I need it to work offline. I need it to handle messy, real-world text.</em>
+        None of them solved my specific problem: <em>Given a domain, find all its sitemaps, extract every documentation URL, let me filter by keyword, and copy the result to my clipboard — in under a minute.</em>
       </p>
 
       <h2>So I Built One</h2>
       <p>
-        The first version took a weekend. It was a Chrome extension with a text box: paste your content, click a button, get a clean list of every URL found, with UTM parameters broken out into columns.
+        The first version was a Google Apps Script web app — a single <code>Code.gs</code> backend and an <code>Index.html</code> frontend. Enter a domain, and it checks <code>robots.txt</code> for sitemap directives, falls back to <code>/sitemap.xml</code>, then recursively parses every sitemap index and URL set it finds.
       </p>
       <p>
-        It wasn't pretty. The regex was basic. But the first time I used it on a real campaign brief, it found 23 URLs in about 2 seconds. My manual pass had found 19. The four I missed? Two were in image alt text, one was in a comment bubble, and one was a tracking pixel URL buried in an HTML snippet.
+        The URLs come back deduplicated and displayed in a clean list. A keyword filtering UI — include and exclude filters with a tag-bubble interface — lets you narrow down to exactly the paths you care about. One click copies the filtered list to your clipboard. Paste it into NotebookLM and you've got an expert guide grounded in official sources.
       </p>
       <p>
-        That gap — <strong>23 vs. 19</strong> — was the moment I knew this wasn't just a convenience tool. It was a necessity.
+        The first time I used it on <code>cloud.google.com</code>, it discovered 8 nested sitemaps and extracted over 4,000 documentation URLs in about 15 seconds. I filtered down to the Cloud Run docs, copied 200 URLs, and pasted them into NotebookLM. Suddenly I had a chatbot that could answer Cloud Run questions with citations to the actual documentation — no hallucinations.
       </p>
       <p>
-        I iterated on the design philosophy: <strong>zero configuration, instant results</strong>. No dropdowns to set, no modes to choose. Paste text, get URLs. The tool should be faster than the thought "I should check the URLs."
+        That moment — going from "I need to read 200 doc pages" to "I have an expert I can ask" — was when I knew this workflow was something bigger than a utility script.
       </p>
 
       <h2>What I Didn't Expect</h2>
       <p>
-        The URL Extractor was supposed to be a personal tool. A scratch-your-own-itch side project that lived in my browser and saved me a few hours a week.
+        The Documentation Extractor was supposed to be a personal tool. A quick script to save me time before building NotebookLM notebooks. But the workflow it enabled — <strong>automated doc discovery → filtered extraction → AI grounding</strong> — turned out to be the seed of something larger.
       </p>
       <p>
-        But when I showed it to colleagues, something interesting happened. The project manager wanted it for QA checklists. The SEO specialist wanted it for audit reports. The email marketer wanted it for pre-send link verification. Everyone had a version of the same problem — <strong>too many URLs, not enough confidence they were all correct</strong>.
+        What if instead of just extracting URLs for manual pasting, the tool could also fetch the content, process it, and power a chatbot directly? What if the sitemap extraction was just the first step in a pipeline that turned any documentation site into a conversational AI?
       </p>
       <p>
-        That's when I started thinking bigger. The URL problem wasn't unique to me. It was a <em>category</em> problem — a symptom of a deeper issue in how marketing teams handle data. The URLs are just the most visible piece. Underneath, there's a whole layer of data capture, validation, and structuring that most teams are doing by hand.
+        That's how <strong>DocWeb</strong> was born — a full sitemap extraction and chatbot platform that evolved directly from this script. The Documentation Extractor is the "v0" prototype, the proof of concept that validated the core workflow. DocWeb takes it the rest of the way.
       </p>
       <p>
-        I started calling this the <strong>Data Layer</strong> — the foundation that everything else in marketing technology should be built on. Not the analytics platform, not the attribution model, not the dashboard. The layer below all of that: the raw capture of what's actually happening in your campaigns.
-      </p>
-      <p>
-        The URL Extractor is the first tool in that layer. It won't be the last.
+        But I'm keeping the original tool alive. It's open source, it's free, and it solves a real problem in under a minute. Sometimes the simplest version is the one people actually use.
       </p>
 
       <hr />
 
       <p>
-        <strong>Next up:</strong> In Part 2, I'll dive into the technical side — how I went from a basic regex to a robust URL parser that handles the weird stuff: tracking pixels, redirect chains, encoded parameters, and URLs that technically shouldn't work but somehow do in production.
+        <strong>Next up:</strong> In Part 2, I'll dive into the technical side — how sitemap parsing works, the edge cases in XML sitemap structures, and how batch fetching with exponential backoff keeps the tool reliable even on massive documentation sites.
       </p>
     </article>
 
@@ -132,7 +111,7 @@
     <div class="blog-cta">
       <div class="blog-cta__card">
         <h2 class="blog-cta__title">See It in Action</h2>
-        <p class="blog-cta__text">Check out the URL Extractor project page for screenshots, tech stack details, and architecture overview.</p>
+        <p class="blog-cta__text">Check out the Documentation Extractor project page for tech stack details, architecture overview, and the live demo.</p>
         <div class="blog-cta__links">
           <a href="../../projects/url-extractor/" class="btn btn--primary">View the Project</a>
           <a href="../../" class="btn btn--outline">Back to Home</a>
@@ -144,10 +123,10 @@
     <div class="series-nav">
       <div class="series-nav__inner">
         <div></div>
-        <div class="series-nav__link" style="opacity:0.4;cursor:default;">
+        <a href="../../blog/parsing-sitemaps-at-scale/" class="series-nav__link">
           <span class="series-nav__label">Next in Series</span>
-          Part 2: Building the Engine (Coming Soon)
-        </div>
+          Part 2: Parsing Sitemaps at Scale
+        </a>
       </div>
     </div>
 

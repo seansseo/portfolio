@@ -21,12 +21,18 @@
 
 .section__label {
   display: inline-block;
+  font-family: var(--font-code);
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: var(--space-sm);
+}
+
+.section__label::before {
+  content: '> ';
+  opacity: 0.6;
 }
 
 .section__title {
@@ -55,9 +61,14 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
+.grid--featured {
+  grid-template-columns: 1.2fr 0.8fr;
+}
+
 @media (max-width: 768px) {
   .grid--2,
-  .grid--3 {
+  .grid--3,
+  .grid--featured {
     grid-template-columns: 1fr;
   }
 

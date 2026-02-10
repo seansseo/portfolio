@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="How the Documentation Extractor parses XML sitemaps — recursive discovery, batch fetching with exponential backoff, and the edge cases real sites produce." />
+    <title>Parsing Sitemaps at Scale — Sean Seo</title>
+    <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
+  </head>
+  <body>
+    <!-- Blog Header -->
+    <header class="blog-header">
+      <div class="container blog-header__content">
+        <a href="../../" class="blog-header__back">&larr; Back to Home</a>
+        <div class="blog-header__meta">
+          <span>Feb 6, 2026</span>
+          <span>&middot;</span>
+          <span>Part 2 of the Documentation Extractor Series</span>
+          <span>&middot;</span>
+          <span>10 min read</span>
+        </div>
+        <h1 class="blog-header__title">Parsing Sitemaps at Scale: Batch Fetching, Edge Cases, and Reliability</h1>
+        <p class="blog-header__subtitle">
+          How the Documentation Extractor actually works under the hood — from robots.txt to recursive sitemap indexes to handling Google's rate limits without losing data.
+        </p>
+      </div>
+    </header>
+
+    <!-- Article Body -->
+    <article class="article">
+      <h2>Sitemaps Aren't as Simple as They Look</h2>
+      <p>
+        If you've never looked at a sitemap, here's the short version: it's an XML file that lists every page on a website. Search engines use them to discover content. The format is standardized, well-documented, and deceptively simple.
+      </p>
+      <p>
+        The basic structure looks like this:
+      </p>
+      <pre><code>&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://example.com/docs/getting-started&lt;/loc&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://example.com/docs/api-reference&lt;/loc&gt;
+  &lt;/url&gt;
+&lt;/urlset&gt;</code></pre>
+      <p>
+        Parse the XML, grab every <code>&lt;loc&gt;</code> element, done. Except in practice, it's never that clean. Real-world sitemaps have layers.
+      </p>
+
+      <h2>The Nesting Problem: Sitemap Indexes</h2>
+      <p>
+        Large documentation sites don't put all their URLs in a single file. Instead, they use <strong>sitemap indexes</strong> — a sitemap that points to other sitemaps. The structure looks identical at the XML level, but instead of <code>&lt;url&gt;</code> elements you get <code>&lt;sitemap&gt;</code> elements:
+      </p>
+      <pre><code>&lt;sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;sitemap&gt;
+    &lt;loc&gt;https://example.com/sitemap-docs.xml&lt;/loc&gt;
+  &lt;/sitemap&gt;
+  &lt;sitemap&gt;
+    &lt;loc&gt;https://example.com/sitemap-api.xml&lt;/loc&gt;
+  &lt;/sitemap&gt;
+&lt;/sitemapindex&gt;</code></pre>
+      <p>
+        And those child sitemaps? They can point to more sitemap indexes. You can end up multiple levels deep. Google Cloud, for instance, has sitemap indexes pointing to sitemap indexes pointing to the actual URL sets.
+      </p>
+      <p>
+        The Documentation Extractor handles this with <strong>recursive parsing</strong>. When it fetches a sitemap, it checks the root element's children. If it finds <code>&lt;sitemap&gt;</code> elements, it collects those URLs and recurses. If it finds <code>&lt;url&gt;</code> elements, it extracts the <code>&lt;loc&gt;</code> values and adds them to the result set. The recursion naturally bottoms out when every branch reaches actual URL sets.
+      </p>
+      <p>
+        In DocWeb, the more advanced version of this tool, I cap recursion at a depth of 5 to prevent runaway parsing on malformed sitemap chains. In the original Documentation Extractor, the recursion is unbounded but hasn't been an issue in practice — most real sites are 2-3 levels deep at most.
+      </p>
+
+      <h2>Finding the Sitemaps in the First Place</h2>
+      <p>
+        Before you can parse sitemaps, you need to find them. The user enters a domain — say, <code>cloud.google.com</code> — and the tool needs to figure out where the sitemaps live.
+      </p>
+      <p>
+        The discovery logic follows a two-step strategy:
+      </p>
+      <ol>
+        <li><strong>Check <code>robots.txt</code></strong> — The <code>robots.txt</code> file at the root of any domain can declare sitemap locations with <code>Sitemap:</code> directives. The tool fetches <code>https://cloud.google.com/robots.txt</code>, scans each line, and collects any URL that follows a <code>Sitemap:</code> prefix. This is the most reliable discovery method because site owners explicitly declare their sitemaps here.</li>
+        <li><strong>Fall back to <code>/sitemap.xml</code></strong> — If <code>robots.txt</code> doesn't declare any sitemaps (or doesn't exist), the tool tries the conventional path <code>/sitemap.xml</code>. Most sites that have a sitemap will serve it at this path even if they don't advertise it in <code>robots.txt</code>.</li>
+      </ol>
+      <p>
+        There's also a shortcut: if the user enters a URL that already contains <code>.xml</code> or <code>sitemap</code>, the tool skips discovery entirely and treats the input as a direct sitemap URL. This is useful when you already know the exact sitemap path.
+      </p>
+      <p>
+        DocWeb takes this further with a full <strong>waterfall discovery algorithm</strong> that adds a third stage: if sitemaps yield fewer than 500 URLs, it falls back to a BFS navigation crawl — extracting links from the site's header, footer, nav, and main elements up to 3 levels deep. This catches documentation that lives outside the sitemap, which is more common than you'd expect.
+      </p>
+
+      <h2>Batch Fetching: Why You Can't Just Fetch Everything at Once</h2>
+      <p>
+        Once you have a list of sitemaps to process, the naive approach is to fetch them all simultaneously. This blows up immediately. Google Apps Script's <code>UrlFetchApp</code> has quota limits — hit them and your requests start failing with <code>Service invoked too many times</code> errors.
+      </p>
+      <p>
+        The solution is <strong>chunked batch fetching</strong>. The Documentation Extractor processes sitemaps in chunks of 50 using <code>UrlFetchApp.fetchAll()</code>, which sends multiple HTTP requests in a single call. This is dramatically faster than sequential fetching while staying within quota limits.
+      </p>
+      <p>
+        Here's the logic: take the list of sitemap URLs, slice it into groups of 50, and send each group as a batch. For each response, check the HTTP status code — skip anything that isn't a 200. Parse the XML, check if it's an index or a URL set, and collect accordingly. Any nested sitemap URLs discovered during this pass get added to a separate list, and once the current batch is done, the function recurses on the nested list.
+      </p>
+      <p>
+        The chunk size of 50 was chosen through trial and error. Smaller chunks mean more round-trips and slower processing. Larger chunks risk hitting quota limits more frequently. 50 turned out to be the sweet spot for Google Apps Script's execution environment.
+      </p>
+
+      <h2>Exponential Backoff: Gracefully Handling Rate Limits</h2>
+      <p>
+        Even with chunked fetching, quota errors still happen — especially on large sites where you're processing hundreds of sitemaps. The tool handles this with <strong>exponential backoff and jitter</strong>.
+      </p>
+      <p>
+        When a batch fetch fails with a quota error, the tool waits before retrying. The wait time follows this formula:
+      </p>
+      <pre><code>sleepTime = (2 ^ attempt) * 1000 + random(0, 1000)</code></pre>
+      <p>
+        So the first retry waits 1-2 seconds, the second waits 2-3 seconds, the third waits 4-5 seconds, the fourth waits 8-9 seconds, and the fifth waits 16-17 seconds. The random jitter prevents multiple concurrent requests from retrying at exactly the same time (the <a href="https://en.wikipedia.org/wiki/Thundering_herd_problem">thundering herd problem</a>).
+      </p>
+      <p>
+        The tool allows up to 5 retry attempts per chunk. If all 5 fail, it throws an error rather than silently returning incomplete data. This is a deliberate design choice — <strong>I'd rather the tool fail loudly than give you a partial URL list you think is complete.</strong>
+      </p>
+      <p>
+        In DocWeb, the retry logic is similar but with tighter parameters: 3 max retries and a 15-second request timeout. The reduced retry count is offset by the fact that DocWeb runs on Firebase Cloud Functions with more generous quotas than Apps Script.
+      </p>
+
+      <h2>XML Parsing: The Namespace Trap</h2>
+      <p>
+        One of the subtler issues in sitemap parsing is <strong>XML namespaces</strong>. The sitemap protocol defines a namespace: <code>http://www.sitemaps.org/schemas/sitemap/0.9</code>. In Google Apps Script, you can't just call <code>root.getChildren('url')</code> — you need to pass the namespace object or you'll get an empty list.
+      </p>
+      <p>
+        The parsing code grabs the namespace from the root element first, then passes it to every <code>getChildren()</code> and <code>getChild()</code> call:
+      </p>
+      <pre><code>const root = xmlDoc.getRootElement();
+const namespace = root.getNamespace();
+
+// Check for sitemap index entries
+const sitemaps = root.getChildren('sitemap', namespace);
+
+if (sitemaps.length > 0) {
+  // It's an index — collect nested sitemap URLs
+  sitemaps.forEach(sitemap => {
+    const loc = sitemap.getChild('loc', namespace);
+    if (loc) nestedSitemapUrls.push(loc.getText());
+  });
+} else {
+  // It's a URL set — collect page URLs
+  const urls = root.getChildren('url', namespace);
+  urls.forEach(urlElement => {
+    const loc = urlElement.getChild('loc', namespace);
+    if (loc) uniqueUrlsSet.add(loc.getText());
+  });
+}</code></pre>
+      <p>
+        The index-vs-URL-set detection is simple: check for <code>&lt;sitemap&gt;</code> children first. If they exist, it's an index. Otherwise, look for <code>&lt;url&gt;</code> children. This works because the two element types are mutually exclusive in valid sitemaps — a file is either an index or a URL set, never both.
+      </p>
+      <p>
+        Parsing errors on individual files are silently caught and skipped. A single malformed sitemap shouldn't tank the entire extraction. The tool continues processing the rest of the batch and moves on.
+      </p>
+
+      <h2>Deduplication: Sets Over Arrays</h2>
+      <p>
+        When you're recursively processing nested sitemaps across a large site, duplicate URLs are inevitable. Different sitemap files may reference the same pages. The fix is straightforward: use a <code>Set</code> instead of an array to collect URLs.
+      </p>
+      <p>
+        Every URL gets added to a single <code>Set</code> that's passed through the entire recursion. The <code>Set</code> handles deduplication automatically — adding a URL that already exists is a no-op. At the end, the <code>Set</code> is spread into an array and returned to the frontend.
+      </p>
+      <p>
+        This sounds obvious, but it matters at scale. When I first tested against <code>cloud.google.com</code>, the raw extraction returned over 6,000 URLs before deduplication and around 4,000 unique ones after. Without the <code>Set</code>, you'd be pasting 2,000 duplicate URLs into NotebookLM and wasting source slots on redundant content.
+      </p>
+
+      <h2>The Frontend: Real-Time Filtering</h2>
+      <p>
+        Extracting every URL from a site's sitemaps is only half the problem. A domain like <code>cloud.google.com</code> has documentation for dozens of products. If you only care about Cloud Run, you don't want 4,000 URLs — you want the 200 that are relevant.
+      </p>
+      <p>
+        The frontend has a <strong>keyword filtering system</strong> with include and exclude controls. Type a keyword, press Enter, and it appears as a tag bubble. Include keywords filter URLs to only those containing the keyword in the path. Exclude keywords remove URLs containing that keyword. Multiple keywords are OR-joined for includes and AND-joined for excludes.
+      </p>
+      <p>
+        The filtering runs entirely client-side on the already-extracted URL list, so it's instant. No round-trips to the server. You can add and remove keywords and watch the result count update in real time until you've narrowed down to exactly the URLs you need.
+      </p>
+      <p>
+        One click copies the filtered list to your clipboard. Paste into NotebookLM, and you're done.
+      </p>
+
+      <h2>What I Learned Building This</h2>
+      <p>
+        A few things surprised me while building the Documentation Extractor:
+      </p>
+      <ul>
+        <li><strong>Sitemaps are unreliable.</strong> Plenty of sites have sitemaps that are outdated, incomplete, or point to 404s. The tool needs to handle non-200 responses gracefully rather than assuming every listed sitemap actually exists.</li>
+        <li><strong>Google Apps Script is more capable than it looks.</strong> <code>UrlFetchApp.fetchAll()</code> for batch HTTP requests and <code>XmlService</code> for XML parsing are surprisingly effective for this use case. The main constraint is the 6-minute execution limit, which the batch + backoff approach stays well within for most sites.</li>
+        <li><strong>The filtering UX matters more than the extraction.</strong> Getting all the URLs is the easy part. The hard part is helping the user find the 50-200 URLs they actually care about out of thousands. The include/exclude tag system was the feature that made the tool genuinely useful rather than just technically impressive.</li>
+      </ul>
+
+      <h2>From Script to Platform</h2>
+      <p>
+        The Documentation Extractor proved that the core workflow — <strong>discover sitemaps, extract URLs, filter, copy</strong> — was valuable. But it also showed the limitations. Pasting URLs into NotebookLM works, but it's a manual handoff. What if the tool could fetch the content itself, process it, and power a chatbot directly?
+      </p>
+      <p>
+        That question led to <strong>DocWeb</strong>. The sitemap discovery logic evolved from a simple two-step check into a multi-stage waterfall algorithm. It now starts with a navigation scrape (extracting structural links from the site's nav, header, and aside elements), then runs sitemap discovery with support for gzip-compressed sitemaps, then falls back to a BFS crawl if the sitemaps don't yield enough URLs.
+      </p>
+      <p>
+        The extracted URLs become nodes in an interactive graph visualization built with Sigma.js. Each node can be scraped on demand — the content gets converted to markdown, chunked, and embedded using Gemini's vector embedding model. An AI chatbot named Dex can then answer questions grounded in the real documentation, with source citations pointing back to the original pages.
+      </p>
+      <p>
+        It's the same idea as the Documentation Extractor — grounding AI in official sources — but taken from a clipboard workflow to a full platform. And it all started with a 150-line Apps Script that figured out how to parse a sitemap.
+      </p>
+
+      <hr />
+
+      <p>
+        The Documentation Extractor is <a href="https://github.com/seansseo/documentation-extractor">open source on GitHub</a>. Try the <a href="https://script.google.com/macros/s/AKfycbzgV2O-n-SXwf6UFRpaFecys6rdFitA4kZZEov9eMQKX4GHvlbkt9KCCbXsR0wgOdomLQ/exec">live demo</a> — enter any domain and see what its sitemaps look like.
+      </p>
+    </article>
+
+    <!-- Blog CTA -->
+    <div class="blog-cta">
+      <div class="blog-cta__card">
+        <h2 class="blog-cta__title">See It in Action</h2>
+        <p class="blog-cta__text">Check out the Documentation Extractor project page for tech stack details, architecture overview, and the live demo.</p>
+        <div class="blog-cta__links">
+          <a href="../../projects/url-extractor/" class="btn btn--primary">View the Project</a>
+          <a href="../../" class="btn btn--outline">Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Series Nav -->
+    <div class="series-nav">
+      <div class="series-nav__inner">
+        <a href="../../blog/why-i-built-url-extractor/" class="series-nav__link">
+          <span class="series-nav__label">Previous in Series</span>
+          Part 1: Why I Built a Documentation Extractor
+        </a>
+        <a href="../../blog/developing-docweb/" class="series-nav__link">
+          <span class="series-nav__label">Next in Series</span>
+          Part 3: Developing DocWeb
+        </a>
+      </div>
+    </div>
+
+    <script type="module" src="/src/blog/parsing-sitemaps-at-scale.js"></script>
+  </body>
+</html>

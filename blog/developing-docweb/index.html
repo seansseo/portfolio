@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="How I turned a 150-line Apps Script into DocWeb — an AI-powered documentation platform with graph visualization, hybrid search, and a chatbot grounded in real docs." />
+    <title>Developing DocWeb: From Script to Platform — Sean Seo</title>
+    <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
+  </head>
+  <body>
+    <!-- Blog Header -->
+    <header class="blog-header">
+      <div class="container blog-header__content">
+        <a href="../../" class="blog-header__back">&larr; Back to Home</a>
+        <div class="blog-header__meta">
+          <span>Feb 6, 2026</span>
+          <span>&middot;</span>
+          <span>Part 3 of the Documentation Extractor Series</span>
+          <span>&middot;</span>
+          <span>12 min read</span>
+        </div>
+        <h1 class="blog-header__title">Developing DocWeb: From Script to Platform</h1>
+        <p class="blog-header__subtitle">
+          How a 150-line Apps Script became an AI-powered documentation platform — the architecture decisions, the hard problems, and what I learned building it.
+        </p>
+      </div>
+    </header>
+
+    <!-- Article Body -->
+    <article class="article">
+      <h2>The Gap Between Script and Product</h2>
+      <p>
+        The Documentation Extractor did one thing well: extract URLs from sitemaps and copy them to your clipboard. But every time I used it, the workflow had the same manual handoff. Extract URLs, switch to NotebookLM, paste, wait for processing, start asking questions. If I wanted to explore a different section of the docs, I'd go back to the extractor, adjust the filters, copy again, paste again.
+      </p>
+      <p>
+        The question that kept nagging me was: <strong>what if the tool didn't just find the URLs but actually understood the content behind them?</strong> What if it could fetch the pages, process them, and let you ask questions directly — all in one place?
+      </p>
+      <p>
+        That question turned into DocWeb. And building it meant going from a single-file Google Apps Script to a full-stack application with real-time data, graph visualization, vector search, and an AI chatbot. Here's how it came together.
+      </p>
+
+      <h2>Choosing the Stack</h2>
+      <p>
+        The Documentation Extractor ran entirely on Google Apps Script — a runtime I chose specifically because it required zero infrastructure. No servers, no deployments, no hosting costs. For a personal utility, that was perfect.
+      </p>
+      <p>
+        DocWeb needed more. The requirements I sketched out:
+      </p>
+      <ul>
+        <li>Real-time updates as URLs are discovered (can't make users stare at a loading spinner for 30 seconds)</li>
+        <li>A graph visualization showing the structure of a documentation site</li>
+        <li>Content scraping and processing on the backend</li>
+        <li>Vector embeddings for semantic search</li>
+        <li>An AI chatbot that can cite its sources</li>
+        <li>User accounts, saved sessions, and eventually billing</li>
+      </ul>
+      <p>
+        I landed on <strong>Next.js</strong> for the frontend, <strong>Firebase</strong> for the backend (Cloud Functions, Firestore, Auth), and <strong>Google's Gemini</strong> for the AI layer. The deciding factor was real-time data — Firestore's snapshot listeners let the frontend subscribe to a collection and get instant updates as new documents are written. When DocWeb discovers URLs, they're saved to Firestore and the graph updates live, node by node. That real-time feedback loop is what makes the discovery phase feel interactive rather than like a batch job.
+      </p>
+      <p>
+        For the graph visualization, I chose <strong>Sigma.js</strong> — a WebGL-based graph rendering library backed by <strong>graphology</strong> for the data structure. Sigma can handle thousands of nodes smoothly because it renders on the GPU rather than the DOM. Documentation sites like <code>cloud.google.com</code> can produce 4,000+ URLs, so DOM-based solutions like D3's force layout were out of the question.
+      </p>
+
+      <h2>The Waterfall Discovery Algorithm</h2>
+      <p>
+        The Documentation Extractor's discovery was simple: check <code>robots.txt</code>, fall back to <code>/sitemap.xml</code>. DocWeb needed to be more comprehensive because it's not just extracting URLs for copy-paste — it's building a complete map of a documentation site. Missing pages means gaps in the chatbot's knowledge.
+      </p>
+      <p>
+        I built a multi-stage waterfall that runs in sequence, with each stage filling gaps left by the previous one:
+      </p>
+      <p>
+        <strong>Priority 0: Nav-Scrape.</strong> Before even touching sitemaps, DocWeb fetches the site's homepage and extracts structural links from <code>&lt;nav&gt;</code>, <code>&lt;aside&gt;</code>, and <code>&lt;header&gt;</code> elements. These links represent the site's own navigation architecture — the pages the site considers important enough to put in its menus. These become "anchor nodes" in the graph with higher importance scores.
+      </p>
+      <p>
+        <strong>Stage 1: Sitemap Discovery.</strong> Same core logic as the original extractor, but enhanced. It handles gzip-compressed sitemaps (<code>.xml.gz</code>), caps recursion at depth 5, and processes up to 10,000 URLs per source. The sitemap parsing still uses chunked batch fetching with exponential backoff, but with a 15-second request timeout and 3 max retries (tuned for Firebase Cloud Functions rather than Apps Script).
+      </p>
+      <p>
+        <strong>Stage 2: Navigation Crawl.</strong> This only runs if the sitemaps yielded fewer than 500 URLs — a signal that the sitemap might be incomplete or that the site doesn't maintain one. The crawl does a BFS from the base URL, extracting links from header, footer, nav, and main elements up to 3 levels deep. It respects <code>robots.txt</code> crawl-delay directives and tracks the source of every discovered URL (was it found in a sitemap, a nav element, a footer link?).
+      </p>
+      <p>
+        <strong>Stage 3: Merge and Classify.</strong> All URLs from all stages are deduplicated, then each one gets classified: path segments are extracted, overlapping clusters are assigned (a URL can belong to multiple topic clusters like <code>/api</code> and <code>/sdk</code>), priority scores are calculated, and non-English URLs are detected and flagged.
+      </p>
+      <p>
+        The entire waterfall runs inside a single Firebase Cloud Function with 1 GiB of memory and a 5-minute timeout. Results are cached globally with a 24-hour TTL — if someone else has already mapped the same domain, the cache is served instead of re-crawling.
+      </p>
+
+      <h2>Turning URLs into a Graph</h2>
+      <p>
+        Once discovery completes, the URLs are saved to Firestore and the frontend picks them up via a real-time listener. Each URL becomes a node in a graphology graph. The challenge is layout — how do you position thousands of nodes so the structure is readable?
+      </p>
+      <p>
+        I use a two-phase approach. First, nodes are given <strong>initial positions based on their cluster</strong>. Each cluster (derived from URL path segments like <code>/docs</code>, <code>/api</code>, <code>/sdk</code>) is assigned an angle on a clock face — documentation at 12 o'clock, API at 1-2 o'clock, features at 3 o'clock, support at 5 o'clock. Nodes are placed along their cluster's radial direction at a distance proportional to their path depth (250 pixels per level). Child nodes inherit their parent's angle with a small random spread to prevent overlap.
+      </p>
+      <p>
+        Then <strong>ForceAtlas2</strong> takes over — a physics-based layout algorithm that runs on a web worker thread so it doesn't block the UI. It treats nodes as charged particles and edges as springs, iteratively adjusting positions until the graph settles into a stable layout. The settings took significant tuning:
+      </p>
+      <ul>
+        <li><code>linLogMode: true</code> — essential for hierarchical tree structures; without it, dense clusters collapse into a single point</li>
+        <li><code>strongGravityMode: true</code> — pulls disconnected branches toward the center so the graph doesn't scatter to infinity</li>
+        <li><code>outboundAttractionDistribution: true</code> — pushes leaf nodes outward, creating the branching tree shape you'd expect from a documentation hierarchy</li>
+        <li><code>gravity: 0.5</code> and <code>scalingRatio: 10</code> — higher gravity keeps branches connected; lower scaling prevents the layout from exploding during early iterations</li>
+      </ul>
+      <p>
+        The result looks like a neural network or a constellation map — clusters of related documentation radiating outward from a central root, with clear visual groupings. Sigma.js renders it all via WebGL, so panning and zooming across thousands of nodes stays smooth. Cluster boundaries are drawn as convex hulls using <code>d3-polygon</code>, overlaid on a canvas layer above the graph.
+      </p>
+
+      <h2>Scraping and Embedding: Building the Knowledge Layer</h2>
+      <p>
+        A graph of URLs is useful for navigation, but to power a chatbot you need the actual content. DocWeb scrapes pages on demand — click a node or a cluster, and the backend fetches the page, extracts the content with <strong>Cheerio</strong> (an HTML parser), and converts it to clean markdown with <strong>Turndown</strong>. The markdown is stored in Firestore alongside the URL document.
+      </p>
+      <p>
+        To enable semantic search, scraped content gets embedded. The text is chunked into segments of 4,000 characters with 400-character overlap (so context isn't lost at chunk boundaries). Each chunk is sent to <strong>Gemini's text-embedding-004 model</strong>, which returns a 768-dimensional vector. These vectors are stored in a global embeddings collection, deduplicated by URL hash — if two users explore the same documentation site, the embeddings are shared rather than regenerated.
+      </p>
+      <p>
+        The embedding pipeline is its own Cloud Function with 1 GiB of memory and a 9-minute timeout. It processes chunks in batches with concurrency control via <code>p-limit</code> to stay within Gemini's rate limits.
+      </p>
+
+      <h2>Hybrid Search: Vectors + BM25</h2>
+      <p>
+        When a user asks Dex (the chatbot) a question, the system needs to find the most relevant documentation chunks to include as context. Pure vector search is great at semantic matching ("how do I authenticate?" finds content about auth even if it doesn't use that exact word), but it can miss exact keyword matches that are obviously relevant. Pure keyword search finds exact terms but misses semantic relationships.
+      </p>
+      <p>
+        DocWeb uses <strong>hybrid search</strong> — running both in parallel and merging the results:
+      </p>
+      <p>
+        <strong>Vector search</strong> embeds the user's query with the same Gemini model, then computes cosine similarity against all stored chunk embeddings for the current domain. The top matches by similarity score are returned.
+      </p>
+      <p>
+        <strong>BM25 keyword search</strong> scores every scraped document against the query terms using the classic BM25 algorithm (<code>k1 = 1.5</code>, <code>b = 0.75</code>). It weights fields differently — title matches are worth 5x, description matches 2x, and content matches 1x. This ensures that a page whose title exactly matches the query ranks higher than a page that mentions the term once in a long body.
+      </p>
+      <p>
+        The final ranking blends both signals:
+      </p>
+      <pre><code>finalScore = (0.7 * normalizedVectorScore) + (0.3 * normalizedKeywordScore)</code></pre>
+      <p>
+        The 70/30 split favors semantic understanding while still rewarding exact matches. The top-ranked chunks are passed to Gemini as context for the chatbot response.
+      </p>
+
+      <h2>Dex: The AI Chatbot</h2>
+      <p>
+        Dex is the interface layer — the part users actually interact with. It's powered by <strong>Gemini 2.5 Flash</strong>, chosen for its speed and cost efficiency (this is a chatbot that needs to respond in seconds, not minutes).
+      </p>
+      <p>
+        The chat function (880 lines of TypeScript) handles more than simple Q&A. It detects greetings and responds with smart topic suggestions based on the site's cluster structure. It performs <strong>just-in-time scraping</strong> — if the hybrid search returns a highly relevant page that hasn't been scraped yet, Dex triggers a scrape, waits for the content, and includes it in the response. It returns source citations with relevance scores so users can verify answers against the original docs.
+      </p>
+      <p>
+        One feature I'm particularly proud of is <strong>thinking steps</strong>. Before generating a response, Dex produces a chain-of-thought trace: what it searched for, which documents it found, how it's interpreting the question. These steps are displayed in a collapsible accordion in the chat UI. It's not just transparency — it helps users understand why Dex gave a particular answer and refine their questions if the results aren't right.
+      </p>
+      <p>
+        The chatbot also has site-map awareness. It receives a summary of the site's cluster structure and can reason about which sections might contain the answer. If a user asks about webhooks and the hybrid search doesn't surface a great match, Dex can identify that there's a <code>/webhooks</code> cluster and request those pages to be scraped.
+      </p>
+
+      <h2>Caching: Making It Fast for Everyone</h2>
+      <p>
+        Sitemap discovery and content scraping are expensive operations. Running the waterfall algorithm against a large site takes 15-30 seconds. Scraping and embedding dozens of pages can take minutes. I didn't want every user to pay that cost for the same popular documentation sites.
+      </p>
+      <p>
+        DocWeb implements a <strong>global cache layer</strong> with three tiers:
+      </p>
+      <ul>
+        <li><strong>Domain cache</strong> — stores the full discovery result (URLs, clusters, metadata) for an entire domain. 24-hour TTL. If you explore <code>docs.stripe.com</code> and someone else did it 6 hours ago, you get instant results from cache.</li>
+        <li><strong>Page cache</strong> — stores scraped content per URL. 24-hour TTL with content-hash freshness detection. Prevents re-scraping the same page within a day.</li>
+        <li><strong>Global embeddings</strong> — vector embeddings are stored per URL hash and shared across all users. If a page has been embedded, any session referencing that URL reuses the existing embeddings. A <code>searchIds</code> array tracks which sessions reference each embedding for cleanup.</li>
+      </ul>
+      <p>
+        The cache transforms the experience for popular documentation sites. First visit to a domain: 15-30 seconds. Every subsequent visit within 24 hours: under 2 seconds.
+      </p>
+
+      <h2>What I'd Do Differently</h2>
+      <p>
+        Building DocWeb from a blank Next.js scaffold to a working product took about three weeks. Here's what I learned:
+      </p>
+      <p>
+        <strong>Start with the data model.</strong> I iterated on the Firestore schema several times as I added features. The <code>DiscoveredUrlDoc</code> interface grew to 25+ fields. If I started over, I'd spend the first day designing the complete data model before writing a single component. The cascading effects of schema changes (re-indexing Firestore, updating security rules, modifying every query) eat more time than the initial design ever would.
+      </p>
+      <p>
+        <strong>Sigma.js has a steep learning curve.</strong> The library is powerful and well-documented, but graph visualization is inherently complex. Getting the ForceAtlas2 layout to produce readable results required days of parameter tuning. The cluster-angle-based initial positioning was critical — without good starting positions, ForceAtlas2 produces tangled, unreadable graphs regardless of settings.
+      </p>
+      <p>
+        <strong>Real-time listeners need careful management.</strong> Firestore snapshot listeners are magical when they work, but they can spiral into performance issues if you're not careful about when to subscribe and unsubscribe. The graph component alone subscribes to a collection that can contain thousands of documents. I had to implement batched graph updates to prevent the UI from freezing as hundreds of nodes streamed in during discovery.
+      </p>
+      <p>
+        <strong>Hybrid search was worth the complexity.</strong> I originally shipped with vector-only search and the results were frustrating — semantically close but missing obvious keyword matches. Adding BM25 alongside vector search was maybe two days of work but dramatically improved answer quality. The 70/30 blend was arrived at through testing on real documentation queries, not theory.
+      </p>
+
+      <h2>Where It Stands</h2>
+      <p>
+        DocWeb is in private beta. It handles documentation sites ranging from small open-source projects (50 URLs) to massive platforms like Google Cloud (4,000+ URLs). The discovery-to-chatbot pipeline works end-to-end: enter a domain, watch the graph build in real time, ask Dex a question, get an answer with citations.
+      </p>
+      <p>
+        The core insight from this whole journey — from the Documentation Extractor script to DocWeb — is that <strong>the hard part of AI grounding isn't the AI. It's the data pipeline.</strong> Discovering content, extracting it, structuring it, embedding it, making it searchable — that's where the engineering effort goes. The LLM call at the end is almost the easy part. Get the retrieval right and the AI is reliable. Get the retrieval wrong and no amount of prompt engineering will save you.
+      </p>
+      <p>
+        It all started with a 150-line script that parsed XML sitemaps. The DNA is still there in every <code>discoverSitemaps</code> call DocWeb makes.
+      </p>
+
+      <hr />
+
+      <p>
+        The original Documentation Extractor is <a href="https://github.com/seansseo/documentation-extractor">open source on GitHub</a>. DocWeb is in private beta — if you're interested in trying it, reach out via the <a href="../../#contact">contact section</a>.
+      </p>
+    </article>
+
+    <!-- Blog CTA -->
+    <div class="blog-cta">
+      <div class="blog-cta__card">
+        <h2 class="blog-cta__title">Where It Started</h2>
+        <p class="blog-cta__text">Check out the Documentation Extractor — the open-source prototype that became the foundation for DocWeb.</p>
+        <div class="blog-cta__links">
+          <a href="../../projects/url-extractor/" class="btn btn--primary">View the Project</a>
+          <a href="../../" class="btn btn--outline">Back to Home</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Series Nav -->
+    <div class="series-nav">
+      <div class="series-nav__inner">
+        <a href="../../blog/parsing-sitemaps-at-scale/" class="series-nav__link">
+          <span class="series-nav__label">Previous in Series</span>
+          Part 2: Parsing Sitemaps at Scale
+        </a>
+        <a href="../../blog/beyond-documentation/" class="series-nav__link">
+          <span class="series-nav__label">Next in Series</span>
+          Part 4: Beyond Documentation
+        </a>
+      </div>
+    </div>
+
+    <script type="module" src="/src/blog/developing-docweb.js"></script>
+  </body>
+</html>

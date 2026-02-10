@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="URL Extractor — Paste any document and instantly extract every URL with full UTM parameter breakdown." />
-    <title>URL Extractor — Sean Seo</title>
+    <meta name="description" content="Documentation Extractor — Extract documentation URLs from any site's XML sitemaps for NotebookLM and AI knowledge tools." />
+    <title>Documentation Extractor — Sean Seo</title>
+    <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
   </head>
   <body>
     <!-- Project Hero -->
@@ -13,13 +14,13 @@
       <div class="container project-hero__content">
         <a href="../../" class="project-hero__back">&larr; Back to Home</a>
         <span class="badge project-hero__badge">Data Layer</span>
-        <h1 class="project-hero__title">URL Extractor</h1>
+        <h1 class="project-hero__title">Documentation Extractor</h1>
         <p class="project-hero__subtitle">
-          Paste any document — campaign brief, email draft, spreadsheet dump — and instantly extract every URL with full UTM parameter breakdown. No more manual scanning. No more missed links.
+          Enter any domain, discover its XML sitemaps, and extract every documentation URL — filtered and ready to paste into NotebookLM or any AI knowledge tool. Turn any doc site into an instant expert guide.
         </p>
         <div class="project-hero__actions">
-          <a href="https://github.com/seansseo" target="_blank" rel="noopener noreferrer" class="btn btn--primary">View on GitHub</a>
-          <a href="../../blog/why-i-built-url-extractor/" class="btn btn--outline">Read the Story</a>
+          <a href="https://github.com/seansseo/documentation-extractor" target="_blank" rel="noopener noreferrer" class="btn btn--primary">View on GitHub</a>
+          <a href="https://script.google.com/macros/s/AKfycbzgV2O-n-SXwf6UFRpaFecys6rdFitA4kZZEov9eMQKX4GHvlbkt9KCCbXsR0wgOdomLQ/exec" target="_blank" rel="noopener noreferrer" class="btn btn--outline">Live Demo</a>
         </div>
       </div>
     </section>
@@ -37,13 +38,13 @@
         <h2 class="project-section__title reveal">The Problem</h2>
         <div class="project-section__text reveal">
           <p>
-            Every campaign launch involves dozens — sometimes hundreds — of URLs. Landing pages, tracking links, redirect chains, UTM-tagged variants for each channel. They're scattered across briefs, emails, spreadsheets, and Slack threads.
+            LLMs hallucinate. Ask one about a specific API parameter, CLI flag, or configuration schema and there's a good chance it'll confidently give you something that doesn't exist. The training data is often outdated or generic — and for technical documentation, "close enough" isn't good enough.
           </p>
           <p>
-            Finding them manually means Ctrl+F-ing through documents, eyeballing links, and praying you didn't miss one. Miss a link, and your attribution breaks. Get a UTM parameter wrong, and your reporting is garbage.
+            The fix is grounding: feed the model official, up-to-date documentation so it has the real source of truth. Tools like NotebookLM make this easy — if you have the URLs. But most documentation sites have hundreds or thousands of pages spread across nested sitemaps. Manually hunting for the right URLs is tedious and incomplete.
           </p>
           <p>
-            I lived this pain for years. The URL Extractor was built to kill it.
+            I kept running into this friction every time I wanted to create an AI-powered reference for a new technology. The Documentation Extractor was built to eliminate it.
           </p>
         </div>
       </div>
@@ -55,10 +56,10 @@
         <h2 class="project-section__title reveal">The Solution</h2>
         <div class="project-section__text reveal">
           <p>
-            Paste any text — a 47-page campaign brief, a chain of emails, raw HTML — and the URL Extractor identifies every URL, deduplicates them, and breaks down each one into its component parts: protocol, domain, path, query parameters, and UTM tags.
+            Enter a domain and the Documentation Extractor discovers its sitemaps — checking <code>robots.txt</code> for directives and falling back to common paths. It recursively parses every sitemap index, fetches URLs in batches with exponential-backoff retry, and deduplicates the results.
           </p>
           <p>
-            It handles the edge cases that trip up simple regex: encoded characters, URLs split across lines, tracking pixels, redirect wrappers, and malformed links that still need to be caught. The output is clean, structured, and ready to drop into your QA checklist or campaign tracker.
+            A keyword filtering UI lets you narrow results in real time — include or exclude URL paths with a tag-bubble interface — then copy the filtered list to your clipboard with one click. Paste directly into NotebookLM and you've got an expert guide grounded in official sources, built in seconds instead of hours.
           </p>
         </div>
       </div>
@@ -70,12 +71,10 @@
         <h2 class="project-section__title reveal">Tech Stack</h2>
         <div class="reveal">
           <div class="tech-stack">
-            <span class="badge">JavaScript</span>
-            <span class="badge">Chrome Extension API</span>
-            <span class="badge">Regex</span>
-            <span class="badge">URL API</span>
-            <span class="badge">Clipboard API</span>
-            <span class="badge">Vite</span>
+            <span class="badge">Google Apps Script</span>
+            <span class="badge">HTML5 / JavaScript</span>
+            <span class="badge">Tailwind CSS</span>
+            <span class="badge">XML Sitemap Parsing</span>
           </div>
         </div>
       </div>
@@ -87,25 +86,20 @@
         <h2 class="project-section__title reveal">Where It Fits</h2>
         <div class="project-section__text reveal">
           <p>
-            The URL Extractor is the first piece of a larger vision — the <strong>3-Layer Marketing Stack</strong>. It sits at the Data Layer, capturing and structuring the raw materials that feed everything else.
+            The Documentation Extractor is the "v0" prototype that proved out a core workflow: <strong>automated sitemap discovery and URL extraction</strong>. That workflow became the starting point for <strong>DocWeb</strong>, a more fully featured sitemap extraction and chatbot platform currently in private beta.
           </p>
         </div>
         <div class="architecture reveal">
           <div class="architecture__grid">
             <div class="arch-card" style="border-color: var(--accent);">
               <div class="arch-card__icon">🔗</div>
-              <h3 class="arch-card__title">Data Layer</h3>
-              <p class="arch-card__text">URL Extractor captures and structures campaign URLs — the foundation everything else builds on.</p>
+              <h3 class="arch-card__title">Documentation Extractor</h3>
+              <p class="arch-card__text">The prototype — automated sitemap discovery, URL extraction, and keyword filtering in a lightweight Apps Script web app.</p>
             </div>
-            <div class="arch-card" style="opacity:0.5;">
+            <div class="arch-card" style="border-color: var(--accent);">
               <div class="arch-card__icon">🧠</div>
-              <h3 class="arch-card__title">Intelligence Layer</h3>
-              <p class="arch-card__text">AI-powered analysis transforms raw data into insights and recommendations.</p>
-            </div>
-            <div class="arch-card" style="opacity:0.5;">
-              <div class="arch-card__icon">📡</div>
-              <h3 class="arch-card__title">Channel Layer</h3>
-              <p class="arch-card__text">Automated delivery of the right message through the right channel.</p>
+              <h3 class="arch-card__title">DocWeb</h3>
+              <p class="arch-card__text">The evolution — full sitemap extraction platform with an integrated AI chatbot grounded in the extracted documentation.</p>
             </div>
           </div>
         </div>
@@ -116,7 +110,7 @@
     <section class="project-cta">
       <div class="container reveal">
         <h2 class="project-cta__title">Want the Full Story?</h2>
-        <p class="project-cta__text">Read about why this tool exists, the problems it solves, and what I learned building it.</p>
+        <p class="project-cta__text">Read about the LLM hallucination problem that sparked this tool and the workflow that led to DocWeb.</p>
         <a href="../../blog/why-i-built-url-extractor/" class="btn btn--primary">Read the Blog Post</a>
       </div>
     </section>

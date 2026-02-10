@@ -6,9 +6,10 @@ import './styles/landing.css'
 import { initNav } from './shared/nav.js'
 import { initFooter } from './shared/footer.js'
 import { initSmoothScroll } from './shared/smooth-scroll.js'
-import { initTheme } from './shared/theme.js'
+import { initTheme, initThemeToggle } from './shared/theme.js'
 
 initNav(true)
 initFooter()
-initSmoothScroll()
 initTheme()
+initThemeToggle()
+initSmoothScroll()

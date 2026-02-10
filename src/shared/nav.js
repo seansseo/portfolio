@@ -1,5 +1,5 @@
 /**
- * Sticky glassmorphism navigation.
+ * Sticky navigation with terminal prompt prefix and theme toggle.
  * @param {boolean} isLanding - true on landing page (uses #hash), false on sub-pages (uses /#hash)
  */
 export function initNav(isLanding = true) {
@@ -18,9 +18,14 @@ export function initNav(isLanding = true) {
         <a href="${prefix}#about" class="nav__link" data-section="about">About</a>
         <a href="${prefix}#contact" class="nav__link" data-section="contact">Contact</a>
       </div>
-      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="nav__right">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/></svg>
+        </button>
+        <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   `
 
