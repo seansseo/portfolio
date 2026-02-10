@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 /* ─── Reset ─── */
 *,
@@ -23,7 +23,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  transition: background 0.4s ease, color 0.4s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -51,69 +50,9 @@ ul, ol {
   list-style: none;
 }
 
-/* ─── Custom Properties — Dark (default) ─── */
+/* ─── Custom Properties ─── */
 :root {
   /* Colors */
-  --bg: #06060a;
-  --bg-mid: #0c0c14;
-  --bg-light: #14141e;
-  --surface: rgba(255, 255, 255, 0.04);
-  --surface-hover: rgba(255, 255, 255, 0.07);
-  --border: rgba(56, 189, 248, 0.08);
-  --border-light: rgba(56, 189, 248, 0.15);
-
-  --text: #8a9aae;
-  --text-bright: #d0e8f0;
-  --text-muted: #556a7e;
-
-  --accent: #38bdf8;
-  --accent-light: #7dd3fc;
-  --accent-dim: rgba(56, 189, 248, 0.08);
-  --secondary: #ff6b35;
-  --secondary-dim: rgba(255, 107, 53, 0.15);
-  --gradient: var(--accent);
-
-  /* Typography */
-  --font-body: 'IBM Plex Mono', 'SF Mono', 'Fira Code', monospace;
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
-  --font-code: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-
-  /* Spacing */
-  --space-xs: 0.5rem;
-  --space-sm: 0.75rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-  --space-3xl: 4rem;
-  --space-4xl: 6rem;
-
-  /* Layout */
-  --max-width: 1200px;
-  --prose-width: 720px;
-
-  /* Effects */
-  --glass-bg: rgba(56, 189, 248, 0.03);
-  --glass-blur: blur(16px);
-  --glass-border: 1px solid rgba(56, 189, 248, 0.08);
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --transition: 0.3s ease;
-
-  /* Glow */
-  --glow-accent: 0 0 20px rgba(56, 189, 248, 0.3), 0 0 60px rgba(56, 189, 248, 0.1);
-  --glow-text: 0 0 10px rgba(56, 189, 248, 0.5), 0 0 30px rgba(56, 189, 248, 0.2);
-
-  /* Overlay toggles */
-  --scanline-opacity: 0.03;
-  --vignette-opacity: 1;
-}
-
-/* ─── Light Theme ─── */
-[data-theme="light"] {
   --bg: #f2ede6;
   --bg-mid: #e8e2d8;
   --bg-light: #ddd7cd;
@@ -132,114 +71,41 @@ ul, ol {
   --secondary: #c45520;
   --secondary-dim: rgba(196, 85, 32, 0.1);
 
+  /* Typography */
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', system-ui, sans-serif;
+  --font-code: 'Inter', system-ui, sans-serif;
+
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+
+  /* Layout */
+  --max-width: 1200px;
+  --prose-width: 720px;
+
+  /* Effects */
   --glass-bg: rgba(14, 116, 144, 0.04);
+  --glass-blur: blur(16px);
   --glass-border: 1px solid rgba(14, 116, 144, 0.1);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-
-  --glow-accent: none;
-  --glow-text: none;
-
-  --scanline-opacity: 0;
-  --vignette-opacity: 0;
-}
-
-/* ─── System Preference Detection ─── */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
-    --bg: #f2ede6;
-    --bg-mid: #e8e2d8;
-    --bg-light: #ddd7cd;
-    --surface: rgba(0, 0, 0, 0.04);
-    --surface-hover: rgba(0, 0, 0, 0.07);
-    --border: rgba(14, 116, 144, 0.12);
-    --border-light: rgba(14, 116, 144, 0.2);
-
-    --text: #4a4540;
-    --text-bright: #1a1815;
-    --text-muted: #7a7570;
-
-    --accent: #0e7490;
-    --accent-light: #0a5e75;
-    --accent-dim: rgba(14, 116, 144, 0.08);
-    --secondary: #c45520;
-    --secondary-dim: rgba(196, 85, 32, 0.1);
-
-    --glass-bg: rgba(14, 116, 144, 0.04);
-    --glass-border: 1px solid rgba(14, 116, 144, 0.1);
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-
-    --glow-accent: none;
-    --glow-text: none;
-
-    --scanline-opacity: 0;
-    --vignette-opacity: 0;
-  }
+  --transition: 0.3s ease;
 }
 
 /* ─── Selection ─── */
 ::selection {
-  background: rgba(56, 189, 248, 0.25);
-  color: var(--text-bright);
-}
-
-[data-theme="light"] ::selection {
   background: rgba(14, 116, 144, 0.2);
-}
-
-/* ─── CRT Scan-line Overlay ─── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
-  opacity: var(--scanline-opacity);
-}
-
-/* ─── CRT Vignette ─── */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
-  opacity: var(--vignette-opacity);
-}
-
-/* ─── Glow Text Utility ─── */
-.glow-text {
-  text-shadow: var(--glow-text);
-}
-
-/* ─── Keyframes ─── */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92% { opacity: 1; }
-  93% { opacity: 0.8; }
-  94% { opacity: 1; }
-  96% { opacity: 0.9; }
-  97% { opacity: 1; }
-}
-
-/* ─── Theme Transition ─── */
-.theme-transitioning,
-.theme-transitioning *,
-.theme-transitioning *::before,
-.theme-transitioning *::after {
-  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease !important;
+  color: var(--text-bright);
 }
 
 /* ─── Scrollbar ─── */

@@ -11,12 +11,8 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 20% 0%, rgba(56, 189, 248, 0.06) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-[data-theme="light"] .hero::before {
   background: radial-gradient(ellipse 60% 50% at 20% 0%, rgba(14, 116, 144, 0.06) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .hero__content {
@@ -40,16 +36,6 @@
   background: var(--accent-dim);
 }
 
-.hero__label .cursor {
-  display: inline-block;
-  width: 2px;
-  height: 1em;
-  background: var(--accent);
-  margin-left: 4px;
-  vertical-align: text-bottom;
-  animation: blink 1s infinite;
-}
-
 .hero__title {
   font-size: clamp(2.25rem, 6vw, 3.75rem);
   font-weight: 800;
@@ -59,13 +45,6 @@
 
 .hero__title .gradient-text {
   color: var(--accent);
-  animation: flicker 8s infinite;
-  text-shadow: var(--glow-text);
-}
-
-[data-theme="light"] .hero__title .gradient-text {
-  animation: none;
-  text-shadow: none;
 }
 
 .hero__subtitle {
@@ -110,14 +89,23 @@
 }
 
 /* ─── About ─── */
+#about {
+  padding-top: var(--space-2xl);
+}
+
+#about .section__header {
+  margin-bottom: var(--space-lg);
+}
+
 .about__content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr auto;
   gap: var(--space-3xl);
-  align-items: start;
+  align-items: center;
 }
 
 .about__story {
+  max-width: var(--prose-width);
   color: var(--text);
   line-height: 1.8;
 }
@@ -126,10 +114,33 @@
   margin-top: var(--space-md);
 }
 
-.about__layers {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
+.about__headshot {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--border-light);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+}
+
+@media (max-width: 768px) {
+  .about__content {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .about__headshot {
+    width: 200px;
+    height: 200px;
+    order: -1;
+  }
+}
+
+/* ─── Strategy ─── */
+.strategy {
+  background: var(--bg-mid);
+  border-top: 1px dashed var(--border);
 }
 
 .layer-card {
@@ -142,10 +153,6 @@
 
 .layer-card:hover {
   border-color: var(--accent);
-  box-shadow: var(--glow-accent);
-}
-
-[data-theme="light"] .layer-card:hover {
   box-shadow: var(--shadow);
 }
 
@@ -168,15 +175,11 @@
   color: var(--text);
 }
 
-@media (max-width: 768px) {
-  .about__content {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ─── Contact ─── */
 .contact {
   text-align: center;
+  background: var(--bg-mid);
+  border-top: 1px dashed var(--border);
 }
 
 .contact__title {
@@ -207,15 +210,60 @@
 .contact__icon:hover {
   color: var(--accent);
   transform: translateY(-2px);
-  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4));
-}
-
-[data-theme="light"] .contact__icon:hover {
-  filter: none;
 }
 
 .contact__icon svg {
   width: 24px;
   height: 24px;
   fill: currentColor;
+}
+
+/* ─── Hero Entrance ─── */
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero__label,
+.hero__title,
+.hero__subtitle,
+.hero__actions .btn {
+  animation: hero-reveal 0.6s ease both;
+}
+
+.hero__label {
+  animation-delay: 0.2s;
+}
+
+.hero__title {
+  animation-delay: 0.5s;
+}
+
+.hero__subtitle {
+  animation-delay: 1.0s;
+}
+
+.hero__actions .btn:nth-child(1) {
+  animation-delay: 1.3s;
+}
+
+.hero__actions .btn:nth-child(2) {
+  animation-delay: 1.5s;
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .hero__label,
+  .hero__title,
+  .hero__subtitle,
+  .hero__actions .btn {
+    animation: none;
+  }
+
 }

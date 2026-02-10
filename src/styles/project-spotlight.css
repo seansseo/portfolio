@@ -9,12 +9,8 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 30% 0%, rgba(56, 189, 248, 0.05) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-[data-theme="light"] .project-hero::before {
   background: radial-gradient(ellipse 60% 50% at 30% 0%, rgba(14, 116, 144, 0.05) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .project-hero__content {
@@ -78,22 +74,6 @@
   font-size: 0.9rem;
 }
 
-/* CRT scan-line overlay on screenshot */
-.project-screenshot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.04) 2px,
-    rgba(0, 0, 0, 0.04) 4px
-  );
-  opacity: var(--scanline-opacity);
-}
-
 /* ─── Project Sections ─── */
 .project-section {
   padding: var(--space-3xl) 0;
@@ -150,10 +130,6 @@
 
 .arch-card:hover {
   border-color: var(--accent);
-  box-shadow: var(--glow-accent);
-}
-
-[data-theme="light"] .arch-card:hover {
   box-shadow: var(--shadow);
 }
 

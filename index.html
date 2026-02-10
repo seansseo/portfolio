@@ -38,34 +38,38 @@
         <h2 class="section__title">What I'm Building</h2>
         <p class="section__subtitle">Each project solves a real problem I faced in marketing operations.</p>
       </div>
-      <div class="grid grid--2">
-        <a href="projects/url-extractor/" class="card reveal" style="text-decoration:none;color:inherit;">
-          <p class="card__label">Data Layer</p>
-          <h3 class="card__title">Documentation Extractor</h3>
-          <p class="card__text">
-            Enter any domain, discover its XML sitemaps, and extract every documentation URL — filtered and ready to
-            paste into NotebookLM or any AI knowledge tool.
-          </p>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
-            <span class="badge">Google Apps Script</span>
-            <span class="badge">XML Parsing</span>
-            <span class="badge">Tailwind CSS</span>
-          </div>
-          <span class="btn btn--ghost">View Project <span class="arrow">&rarr;</span></span>
-        </a>
-        <div class="card card--coming-soon">
-          <p class="card__label">Intelligence Layer</p>
-          <h3 class="card__title">AI Career Strategist</h3>
-          <p class="card__text">
-            An AI-powered tool that analyzes job postings, matches them to your experience, and generates tailored
-            application materials. The intelligence layer in action.
-          </p>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
-            <span class="badge badge--purple">AI/ML</span>
-            <span class="badge badge--purple">NLP</span>
-            <span class="badge badge--purple">Python</span>
+      <div class="scroll-row">
+        <button class="scroll-row__btn scroll-row__btn--prev" aria-label="Scroll left">&larr;</button>
+        <div class="scroll-row__track">
+          <a href="projects/url-extractor/" class="card" style="text-decoration:none;color:inherit;">
+            <p class="card__label">Data Layer</p>
+            <h3 class="card__title">Documentation Extractor</h3>
+            <p class="card__text">
+              Enter any domain, discover its XML sitemaps, and extract every documentation URL — filtered and ready to
+              paste into NotebookLM or any AI knowledge tool.
+            </p>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+              <span class="badge">Google Apps Script</span>
+              <span class="badge">XML Parsing</span>
+              <span class="badge">Tailwind CSS</span>
+            </div>
+            <span class="btn btn--ghost">View Project <span class="arrow">&rarr;</span></span>
+          </a>
+          <div class="card card--coming-soon">
+            <p class="card__label">Intelligence Layer</p>
+            <h3 class="card__title">AI Career Strategist</h3>
+            <p class="card__text">
+              An AI-powered tool that analyzes job postings, matches them to your experience, and generates tailored
+              application materials. The intelligence layer in action.
+            </p>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+              <span class="badge badge--purple">AI/ML</span>
+              <span class="badge badge--purple">NLP</span>
+              <span class="badge badge--purple">Python</span>
+            </div>
           </div>
         </div>
+        <button class="scroll-row__btn scroll-row__btn--next" aria-label="Scroll right">&rarr;</button>
       </div>
     </div>
   </section>
@@ -78,55 +82,90 @@
         <h2 class="section__title">Thinking Out Loud</h2>
         <p class="section__subtitle">Writing about the problems I'm solving and the tools I'm building.</p>
       </div>
-      <div class="grid grid--2">
-        <a href="blog/beyond-documentation/" class="card reveal" style="text-decoration:none;color:inherit;">
-          <p class="card__date">Feb 6, 2026 &middot; Part 4 of the Documentation Extractor Series</p>
-          <h3 class="card__title">Beyond Documentation: Context Is the Real AI Moat</h3>
-          <p class="card__text">
-            DocWeb works on any public website, not just docs. That reframes the question: the value of AI isn't the
-            model — it's the context pipeline you build around it.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
-            <span class="card__read-time">9 min read</span>
-          </div>
-        </a>
-        <a href="blog/developing-docweb/" class="card reveal" style="text-decoration:none;color:inherit;">
-          <p class="card__date">Feb 6, 2026 &middot; Part 3 of the Documentation Extractor Series</p>
-          <h3 class="card__title">Developing DocWeb: From Script to Platform</h3>
-          <p class="card__text">
-            How a 150-line Apps Script became an AI-powered documentation platform — graph visualization, hybrid search,
-            and a chatbot grounded in real docs.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
-            <span class="card__read-time">12 min read</span>
-          </div>
-        </a>
-        <a href="blog/parsing-sitemaps-at-scale/" class="card reveal" style="text-decoration:none;color:inherit;">
-          <p class="card__date">Feb 6, 2026 &middot; Part 2 of the Documentation Extractor Series</p>
-          <h3 class="card__title">Parsing Sitemaps at Scale: Batch Fetching, Edge Cases, and Reliability</h3>
-          <p class="card__text">
-            How sitemap parsing works under the hood — recursive index resolution, batch fetching with exponential
-            backoff, and handling the weird XML structures real sites produce.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
-            <span class="card__read-time">10 min read</span>
-          </div>
-        </a>
-        <a href="blog/why-i-built-url-extractor/" class="card reveal" style="text-decoration:none;color:inherit;">
-          <p class="card__date">Feb 6, 2026 &middot; Part 1 of the Documentation Extractor Series</p>
-          <h3 class="card__title">The Problem: Why I Built a Documentation Extractor</h3>
-          <p class="card__text">
-            LLMs kept hallucinating technical details. I needed a way to ground them in official documentation — but
-            collecting the URLs was its own problem.
-          </p>
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
-            <span class="card__read-time">7 min read</span>
-          </div>
-        </a>
+      <div class="scroll-row">
+        <button class="scroll-row__btn scroll-row__btn--prev" aria-label="Scroll left">&larr;</button>
+        <div class="scroll-row__track">
+          <a href="blog/beyond-documentation/" class="card" style="text-decoration:none;color:inherit;">
+            <p class="card__date">Feb 6, 2026 &middot; Part 4 of the Documentation Extractor Series</p>
+            <h3 class="card__title">Beyond Documentation: Context Is the Real AI Moat</h3>
+            <p class="card__text">
+              DocWeb works on any public website, not just docs. That reframes the question: the value of AI isn't the
+              model — it's the context pipeline you build around it.
+            </p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
+              <span class="card__read-time">9 min read</span>
+            </div>
+          </a>
+          <a href="blog/developing-docweb/" class="card" style="text-decoration:none;color:inherit;">
+            <p class="card__date">Feb 6, 2026 &middot; Part 3 of the Documentation Extractor Series</p>
+            <h3 class="card__title">Developing DocWeb: From Script to Platform</h3>
+            <p class="card__text">
+              How a 150-line Apps Script became an AI-powered documentation platform — graph visualization, hybrid search,
+              and a chatbot grounded in real docs.
+            </p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
+              <span class="card__read-time">12 min read</span>
+            </div>
+          </a>
+          <a href="blog/parsing-sitemaps-at-scale/" class="card" style="text-decoration:none;color:inherit;">
+            <p class="card__date">Feb 6, 2026 &middot; Part 2 of the Documentation Extractor Series</p>
+            <h3 class="card__title">Parsing Sitemaps at Scale: Batch Fetching, Edge Cases, and Reliability</h3>
+            <p class="card__text">
+              How sitemap parsing works under the hood — recursive index resolution, batch fetching with exponential
+              backoff, and handling the weird XML structures real sites produce.
+            </p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
+              <span class="card__read-time">10 min read</span>
+            </div>
+          </a>
+          <a href="blog/why-i-built-url-extractor/" class="card" style="text-decoration:none;color:inherit;">
+            <p class="card__date">Feb 6, 2026 &middot; Part 1 of the Documentation Extractor Series</p>
+            <h3 class="card__title">The Problem: Why I Built a Documentation Extractor</h3>
+            <p class="card__text">
+              LLMs kept hallucinating technical details. I needed a way to ground them in official documentation — but
+              collecting the URLs was its own problem.
+            </p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
+              <span class="card__read-time">7 min read</span>
+            </div>
+          </a>
+        </div>
+        <button class="scroll-row__btn scroll-row__btn--next" aria-label="Scroll right">&rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Strategy -->
+  <section class="strategy section" id="strategy">
+    <div class="container">
+      <div class="section__header reveal">
+        <p class="section__label">Strategy</p>
+        <h2 class="section__title">The 3-Layer Marketing Stack</h2>
+        <p class="section__subtitle">Every tool I build maps to one of three layers. Together, they form a complete marketing operations system.</p>
+      </div>
+      <div class="grid grid--3 strategy__layers">
+        <div class="layer-card reveal-child" style="--reveal-delay: 0s">
+          <p class="layer-card__number">Layer 01</p>
+          <h3 class="layer-card__title">Data</h3>
+          <p class="layer-card__text">Capture, extract, and structure the raw materials of marketing — URLs,
+            parameters, campaign metadata.</p>
+        </div>
+        <div class="layer-card reveal-child" style="--reveal-delay: 0.12s">
+          <p class="layer-card__number">Layer 02</p>
+          <h3 class="layer-card__title">Intelligence</h3>
+          <p class="layer-card__text">Apply AI to transform raw data into actionable insights — pattern matching,
+            anomaly detection, recommendations.</p>
+        </div>
+        <div class="layer-card reveal-child" style="--reveal-delay: 0.24s">
+          <p class="layer-card__number">Layer 03</p>
+          <h3 class="layer-card__title">Channel</h3>
+          <p class="layer-card__text">Deliver the right message through the right channel — automated, personalized,
+            and measurable.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -146,35 +185,12 @@
             marketing actually happens.
           </p>
           <p>
-            So I started building. Not another SaaS platform, but focused tools that solve one problem well. Each tool
-            maps to a layer in what I call the <strong>3-Layer Marketing Stack</strong>: Data, Intelligence, and
-            Channel.
-          </p>
-          <p>
-            The URL Extractor is the first piece — the data layer. Because you can't optimize what you can't see, and
-            you can't see what you haven't captured.
+            So I started building. Not another SaaS platform, but focused tools that solve one problem well.
+            The Documentation Extractor is the first piece — the data layer. Because you can't optimize what you
+            can't see, and you can't see what you haven't captured.
           </p>
         </div>
-        <div class="about__layers">
-          <div class="layer-card">
-            <p class="layer-card__number">Layer 01</p>
-            <h3 class="layer-card__title">Data</h3>
-            <p class="layer-card__text">Capture, extract, and structure the raw materials of marketing — URLs,
-              parameters, campaign metadata.</p>
-          </div>
-          <div class="layer-card">
-            <p class="layer-card__number">Layer 02</p>
-            <h3 class="layer-card__title">Intelligence</h3>
-            <p class="layer-card__text">Apply AI to transform raw data into actionable insights — pattern matching,
-              anomaly detection, recommendations.</p>
-          </div>
-          <div class="layer-card">
-            <p class="layer-card__number">Layer 03</p>
-            <h3 class="layer-card__title">Channel</h3>
-            <p class="layer-card__text">Deliver the right message through the right channel — automated, personalized,
-              and measurable.</p>
-          </div>
-        </div>
+        <img src="/images/headshot.png" alt="Sean Seo" class="about__headshot" />
       </div>
     </div>
   </section>

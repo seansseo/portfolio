@@ -18,93 +18,88 @@ export function initTheme() {
 
   // Reveal animations
   const reveals = document.querySelectorAll('.reveal')
-  if (reveals.length === 0) return
+  if (reveals.length > 0) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal--visible')
+            revealObserver.unobserve(entry.target)
+          }
+        })
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    )
 
-  const revealObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal--visible')
-          revealObserver.unobserve(entry.target)
-        }
-      })
-    },
-    {
-      threshold: 0.1,
-      rootMargin: '0px 0px -40px 0px',
-    }
-  )
-
-  reveals.forEach((el) => revealObserver.observe(el))
-}
-
-/**
- * Apply initial theme from localStorage or system preference.
- */
-export function applyInitialTheme() {
-  const stored = localStorage.getItem('theme')
-  if (stored) {
-    document.documentElement.setAttribute('data-theme', stored)
+    reveals.forEach((el) => revealObserver.observe(el))
   }
-  // If no stored preference, CSS handles system preference via @media
+
+  // Stagger cards inside grids: swap .reveal for .reveal-child with delays
+  document.querySelectorAll('.grid').forEach((grid) => {
+    const cards = grid.querySelectorAll(':scope > .reveal')
+    cards.forEach((card, i) => {
+      card.classList.remove('reveal')
+      card.classList.add('reveal-child')
+      card.style.setProperty('--reveal-delay', `${i * 0.12}s`)
+    })
+  })
+
+  // Observer for staggered reveal-child elements
+  const revealChildren = document.querySelectorAll('.reveal-child')
+  if (revealChildren.length > 0) {
+    const childObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-child--visible')
+            childObserver.unobserve(entry.target)
+          }
+        })
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    )
+
+    revealChildren.forEach((el) => childObserver.observe(el))
+  }
 }
 
 /**
- * Toggle between dark and light themes.
+ * Hero parallax fade-out on scroll.
+ * Each hero element drifts up at a different speed and fades out.
  */
-export function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme')
-  const isDark = !current || current === 'dark'
-  const next = isDark ? 'light' : 'dark'
+export function initHeroParallax() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-  // Add transition class for smooth switch
-  document.documentElement.classList.add('theme-transitioning')
+  const hero = document.getElementById('hero')
+  if (!hero) return
 
-  document.documentElement.setAttribute('data-theme', next)
-  localStorage.setItem('theme', next)
+  const content = hero.querySelector('.hero__content')
+  if (!content) return
 
-  // Update toggle icon
-  updateToggleIcon(next)
+  function onScroll() {
+    const rect = hero.getBoundingClientRect()
 
-  // Remove transition class after animation
+    // Only run while hero is in viewport
+    if (rect.bottom < 0) return
+
+    const scrolled = Math.max(0, -rect.top)
+    const heroHeight = rect.height
+    const progress = Math.min(scrolled / heroHeight, 1)
+
+    const drift = scrolled * 0.3
+    const fade = Math.max(0, 1 - progress * 1.3)
+    content.style.transform = `translateY(-${drift}px)`
+    content.style.opacity = fade
+  }
+
+  // Delay attachment so boot sequence completes first
   setTimeout(() => {
-    document.documentElement.classList.remove('theme-transitioning')
-  }, 400)
-}
-
-/**
- * Update the theme toggle button icon.
- */
-function updateToggleIcon(theme) {
-  const btn = document.getElementById('theme-toggle')
-  if (!btn) return
-
-  const isDark = !theme || theme === 'dark'
-
-  // Sun icon for dark mode (click to go light), Moon icon for light mode (click to go dark)
-  if (isDark) {
-    btn.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`
-  } else {
-    btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
-  }
-}
-
-/**
- * Initialize the theme toggle button.
- */
-export function initThemeToggle() {
-  const btn = document.getElementById('theme-toggle')
-  if (!btn) return
-
-  // Set initial icon
-  const current = document.documentElement.getAttribute('data-theme')
-  // Check if system prefers light and no explicit theme is set
-  let effectiveTheme = current
-  if (!effectiveTheme) {
-    effectiveTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
-  }
-  updateToggleIcon(effectiveTheme)
-
-  // Bind click
-  btn.addEventListener('click', toggleTheme)
+    window.addEventListener('scroll', onScroll, { passive: true })
+  }, 2000)
 }
