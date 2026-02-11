@@ -6,6 +6,16 @@
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.card__bottom {
+  margin-top: auto;
+}
+
+.card__bottom .btn--ghost {
+  margin-top: var(--space-md);
 }
 
 .card:hover {

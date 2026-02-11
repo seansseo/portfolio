@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         'url-extractor': resolve(__dirname, 'projects/url-extractor/index.html'),
+        'docweb': resolve(__dirname, 'projects/docweb/index.html'),
         'blog-url-extractor': resolve(__dirname, 'blog/why-i-built-url-extractor/index.html'),
         'blog-parsing-sitemaps': resolve(__dirname, 'blog/parsing-sitemaps-at-scale/index.html'),
         'blog-developing-docweb': resolve(__dirname, 'blog/developing-docweb/index.html'),

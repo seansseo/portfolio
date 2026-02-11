@@ -12,7 +12,10 @@ export function initSmoothScroll() {
     if (!target) return
 
     e.preventDefault()
-    target.scrollIntoView({ behavior: 'smooth' })
+    const nav = document.getElementById('nav')
+    const offset = nav ? nav.offsetHeight : 0
+    const top = target.getBoundingClientRect().top + window.scrollY - offset
+    window.scrollTo({ top, behavior: 'smooth' })
 
     // Update URL without scroll jump
     history.pushState(null, '', `#${targetId}`)
