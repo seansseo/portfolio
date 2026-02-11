@@ -85,7 +85,7 @@
         There's also a shortcut: if the user enters a URL that already contains <code>.xml</code> or <code>sitemap</code>, the tool skips discovery entirely and treats the input as a direct sitemap URL. This is useful when you already know the exact sitemap path.
       </p>
       <p>
-        DocWeb takes this further with a full <strong>waterfall discovery algorithm</strong> that adds a third stage: if sitemaps yield fewer than 500 URLs, it falls back to a BFS navigation crawl — extracting links from the site's header, footer, nav, and main elements up to 3 levels deep. This catches documentation that lives outside the sitemap, which is more common than you'd expect.
+        DocWeb takes this further with a full <strong>waterfall discovery algorithm</strong> that adds a third stage: if sitemaps yield fewer than 500 URLs, it falls back to a BFS navigation crawl — extracting links from the site's header, footer, nav, and main elements up to 3 levels deep. This catches documentation that lives outside the sitemap, which is more common than you'd expect. It also solves one of the Documentation Extractor's biggest limitations: sites without a sitemap at all. If there's no XML sitemap to parse, the navigation crawl can still discover the site's content by following its own link structure.
       </p>
 
       <h2>Batch Fetching: Why You Can't Just Fetch Everything at Once</h2>
@@ -162,12 +162,12 @@ if (sitemaps.length > 0) {
         Every URL gets added to a single <code>Set</code> that's passed through the entire recursion. The <code>Set</code> handles deduplication automatically — adding a URL that already exists is a no-op. At the end, the <code>Set</code> is spread into an array and returned to the frontend.
       </p>
       <p>
-        This sounds obvious, but it matters at scale. When I first tested against <code>cloud.google.com</code>, the raw extraction returned over 6,000 URLs before deduplication and around 4,000 unique ones after. Without the <code>Set</code>, you'd be pasting 2,000 duplicate URLs into NotebookLM and wasting source slots on redundant content.
+        This sounds obvious, but it matters at scale. When I tested against <code>docs.stripe.com</code>, the raw extraction returned over 5,000 URLs before deduplication and around 3,800 unique ones after. Without the <code>Set</code>, you'd be pasting over a thousand duplicate URLs into NotebookLM and wasting source slots on redundant content.
       </p>
 
       <h2>The Frontend: Real-Time Filtering</h2>
       <p>
-        Extracting every URL from a site's sitemaps is only half the problem. A domain like <code>cloud.google.com</code> has documentation for dozens of products. If you only care about Cloud Run, you don't want 4,000 URLs — you want the 200 that are relevant.
+        Extracting every URL from a site's sitemaps is only half the problem. A domain like <code>docs.stripe.com</code> has documentation for dozens of products. If you only care about Payments, you don't want 3,800 URLs — you want the few hundred that are relevant.
       </p>
       <p>
         The frontend has a <strong>keyword filtering system</strong> with include and exclude controls. Type a keyword, press Enter, and it appears as a tag bubble. Include keywords filter URLs to only those containing the keyword in the path. Exclude keywords remove URLs containing that keyword. Multiple keywords are OR-joined for includes and AND-joined for excludes.
@@ -185,16 +185,16 @@ if (sitemaps.length > 0) {
       </p>
       <ul>
         <li><strong>Sitemaps are unreliable.</strong> Plenty of sites have sitemaps that are outdated, incomplete, or point to 404s. The tool needs to handle non-200 responses gracefully rather than assuming every listed sitemap actually exists.</li>
-        <li><strong>Google Apps Script is more capable than it looks.</strong> <code>UrlFetchApp.fetchAll()</code> for batch HTTP requests and <code>XmlService</code> for XML parsing are surprisingly effective for this use case. The main constraint is the 6-minute execution limit, which the batch + backoff approach stays well within for most sites.</li>
+        <li><strong>Google Apps Script is more capable than it looks — until it isn't.</strong> <code>UrlFetchApp.fetchAll()</code> for batch HTTP requests and <code>XmlService</code> for XML parsing are surprisingly effective. But the 6-minute execution limit is a hard ceiling. Small-to-medium sites like <code>docs.stripe.com</code> (~3,800 URLs) fit comfortably. Large domains like <code>cloud.google.com</code> with 100,000+ URLs will time out before extraction finishes. And because <code>google.script.run</code> is a single async call, there's no way to stream progress back to the frontend — the user just sees a spinner until it either completes or fails.</li>
         <li><strong>The filtering UX matters more than the extraction.</strong> Getting all the URLs is the easy part. The hard part is helping the user find the 50-200 URLs they actually care about out of thousands. The include/exclude tag system was the feature that made the tool genuinely useful rather than just technically impressive.</li>
       </ul>
 
       <h2>From Script to Platform</h2>
       <p>
-        The Documentation Extractor proved that the core workflow — <strong>discover sitemaps, extract URLs, filter, copy</strong> — was valuable. But it also showed the limitations. Pasting URLs into NotebookLM works, but it's a manual handoff. What if the tool could fetch the content itself, process it, and power a chatbot directly?
+        The Documentation Extractor proved that the core workflow — <strong>discover sitemaps, extract URLs, filter, copy</strong> — was valuable. But it also exposed hard constraints. The 6-minute execution limit means large sites simply don't work. The lack of progress feedback makes the UI feel broken on anything that takes more than a few seconds. And the entire output is a clipboard paste — useful, but manual. What if the tool could fetch the content itself, process it, and power a chatbot directly?
       </p>
       <p>
-        That question led to <strong>DocWeb</strong>. The sitemap discovery logic evolved from a simple two-step check into a multi-stage waterfall algorithm. It now starts with a navigation scrape (extracting structural links from the site's nav, header, and aside elements), then runs sitemap discovery with support for gzip-compressed sitemaps, then falls back to a BFS crawl if the sitemaps don't yield enough URLs.
+        That question led to <strong><a href="https://docweb.net" target="_blank" rel="noopener noreferrer">DocWeb</a></strong>. The sitemap discovery logic evolved from a simple two-step check into a multi-stage waterfall algorithm. It now starts with a navigation scrape (extracting structural links from the site's nav, header, and aside elements), then runs sitemap discovery with support for gzip-compressed sitemaps, then falls back to a BFS crawl if the sitemaps don't yield enough URLs.
       </p>
       <p>
         The extracted URLs become nodes in an interactive graph visualization built with Sigma.js. Each node can be scraped on demand — the content gets converted to markdown, chunked, and embedded using Gemini's vector embedding model. An AI chatbot named Dex can then answer questions grounded in the real documentation, with source citations pointing back to the original pages.

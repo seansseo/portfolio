@@ -99,6 +99,17 @@
   margin-top: var(--space-md);
 }
 
+.project-section__text ul {
+  list-style: disc;
+  margin: var(--space-md) 0;
+  padding-left: var(--space-xl);
+}
+
+.project-section__text li {
+  line-height: 1.8;
+  margin-bottom: var(--space-xs);
+}
+
 /* ─── Tech Stack ─── */
 .tech-stack {
   display: flex;

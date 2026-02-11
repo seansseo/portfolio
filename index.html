@@ -74,19 +74,22 @@
               <span class="btn btn--ghost">View Project <span class="arrow">&rarr;</span></span>
             </div>
           </a>
-          <div class="card card--coming-soon">
-            <p class="card__label">Channel Layer</p>
+          <a href="projects/utm-shield/" class="card" style="text-decoration:none;color:inherit;">
+            <p class="card__label"><span style="color:var(--secondary)">Intelligence Layer</span> &middot; <span style="color:var(--purple)">Channel Layer</span></p>
             <h3 class="card__title">UTM Shield</h3>
             <p class="card__text">
               A Chrome extension that reads, validates, and QAs UTM parameters across your campaigns.
               Catch broken tracking before it costs you data.
             </p>
-            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">
-              <span class="badge badge--purple">Chrome Extension</span>
-              <span class="badge badge--purple">UTM Validation</span>
-              <span class="badge badge--purple">QA</span>
+            <div class="card__bottom">
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <span class="badge badge--channel">Chrome Extension</span>
+                <span class="badge badge--channel">UTM Validation</span>
+                <span class="badge badge--channel">QA</span>
+              </div>
+              <span class="btn btn--ghost">View Project <span class="arrow">&rarr;</span></span>
             </div>
-          </div>
+          </a>
         </div>
         <button class="scroll-row__btn scroll-row__btn--next" aria-label="Scroll right">&rarr;</button>
       </div>
@@ -104,6 +107,18 @@
       <div class="scroll-row">
         <button class="scroll-row__btn scroll-row__btn--prev" aria-label="Scroll left">&larr;</button>
         <div class="scroll-row__track">
+          <a href="blog/why-utm-tracking-breaks/" class="card" style="text-decoration:none;color:inherit;">
+            <p class="card__date">Feb 10, 2026 &middot; UTM Shield Series</p>
+            <h3 class="card__title">Why UTM Tracking Breaks (And Nobody Notices Until It's Too Late)</h3>
+            <p class="card__text">
+              UTM parameters are simple in theory. In practice, they're the most fragile part of your entire marketing
+              stack. Here's why validation at the point of creation matters.
+            </p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span class="btn btn--ghost">Read Post <span class="arrow">&rarr;</span></span>
+              <span class="card__read-time">8 min read</span>
+            </div>
+          </a>
           <a href="blog/beyond-documentation/" class="card" style="text-decoration:none;color:inherit;">
             <p class="card__date">Feb 6, 2026 &middot; Part 4 of the Documentation Extractor Series</p>
             <h3 class="card__title">Beyond Documentation: Context Is the Real AI Moat</h3>

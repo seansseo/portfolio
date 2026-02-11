@@ -1,135 +1,220 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Why I Built a Documentation Extractor — LLMs hallucinate technical details. I needed a way to ground them in official docs, fast." />
-    <title>Why I Built a Documentation Extractor — Sean Seo</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
-  </head>
-  <body>
-    <!-- Blog Header -->
-    <header class="blog-header">
-      <div class="container blog-header__content">
-        <a href="../../" class="blog-header__back">&larr; Back to Home</a>
-        <div class="blog-header__meta">
-          <span>Feb 6, 2026</span>
-          <span>&middot;</span>
-          <span>Part 1 of the Documentation Extractor Series</span>
-          <span>&middot;</span>
-          <span>7 min read</span>
-        </div>
-        <h1 class="blog-header__title">The Problem: Why I Built a Documentation Extractor</h1>
-        <p class="blog-header__subtitle">
-          LLMs kept hallucinating technical details. I needed a way to ground them in official documentation — but collecting the URLs was its own problem.
-        </p>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Why I Built a Documentation Extractor — LLMs hallucinate technical details. I needed a way to ground them in official docs, fast." />
+  <title>Why I Built a Documentation Extractor — Sean Seo</title>
+  <script>(function () { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t) })()</script>
+</head>
+
+<body>
+  <!-- Blog Header -->
+  <header class="blog-header">
+    <div class="container blog-header__content">
+      <a href="../../" class="blog-header__back">&larr; Back to Home</a>
+      <div class="blog-header__meta">
+        <span>Feb 6, 2026</span>
+        <span>&middot;</span>
+        <span>Part 1 of the Documentation Extractor Series</span>
+        <span>&middot;</span>
+        <span>7 min read</span>
       </div>
-    </header>
+      <h1 class="blog-header__title">The Problem: Why I Built a Documentation Extractor</h1>
+      <p class="blog-header__subtitle">
+        LLMs kept hallucinating technical details. I needed a way to ground them in official documentation — but
+        collecting the URLs was the first challenge.
+      </p>
+    </div>
+  </header>
 
-    <!-- Article Body -->
-    <article class="article">
-      <h2>The Hallucination Problem</h2>
-      <p>
-        I was deep in a project, asking an LLM about a specific API parameter. The answer sounded authoritative — exact flag name, clear explanation, even a code example. One problem: the parameter didn't exist. The model had hallucinated it with complete confidence.
-      </p>
-      <p>
-        This wasn't a one-off. It kept happening — with CLI flags, configuration schemas, SDK methods. The training data was either outdated or too generic. For technical work, "close enough" doesn't cut it. You need the real answer from the real documentation.
-      </p>
-      <p>
-        That's when I discovered the power of <strong>grounding</strong>: feeding official documentation directly into an AI tool so it has the actual source of truth. Tools like NotebookLM made this workflow possible — upload sources, ask questions, get answers backed by real docs instead of training-data approximations.
-      </p>
-      <p>
-        There was just one friction point. A big one.
-      </p>
+  <!-- Article Body -->
+  <article class="article">
+    <h2>The Hallucination Problem</h2>
+    <p>
+      In theory, technical documentation is a perfect use case for LLMs. Instead of spending hours digging through
+      endless docs looking for a specific detail, a model should be able to give you the answer. The right API
+      parameter, the correct
+      CLI flag, the exact configuration schema.
+    </p>
+    <p>
+      In practice, the answers sound authoritative but are often wrong. Not only is technical documentation extremely
+      complex, it's updated frequently. If an LLM is trained on outdated or generic data, it will confidently give you
+      answers that no longer apply — or never did. For technical work, "close enough" doesn't cut it. You need the real
+      answer from the real documentation.
+    </p>
+    <p>
+      That's when I discovered the importance of <strong>grounding</strong>: feeding official documentation directly
+      into an
+      AI tool so it has the actual source of truth. Tools like <a href="https://notebooklm.google.com/" target="_blank"
+        rel="noopener noreferrer">NotebookLM</a> made this workflow possible, by allowing you to upload sources,
+      ask questions, and get answers backed by real, cited docs instead of training-data approximations.
+    </p>
+    <p>
+      There was just one friction point.
+    </p>
 
-      <h2>The URL Collection Problem</h2>
-      <p>
-        To ground an LLM in a technology's documentation, you need the URLs. And most documentation sites are massive. Google Cloud has thousands of pages. AWS documentation spans hundreds of services. Even a focused framework like Next.js has docs spread across dozens of nested paths.
-      </p>
-      <p>
-        Every time I wanted to create a new AI-powered reference guide, the process looked like this:
-      </p>
-      <ol>
-        <li>Go to the documentation site</li>
-        <li>Click around trying to find the sitemap</li>
-        <li>Open the XML in a browser tab — wall of angle brackets</li>
-        <li>Realize it's a sitemap index pointing to more sitemaps</li>
-        <li>Open each nested sitemap manually</li>
-        <li>Copy URLs one at a time, or try to parse the XML by eye</li>
-        <li>Realize half the URLs are for older API versions you don't need</li>
-        <li>Give up and just grab the top-level pages, hoping that's enough</li>
-      </ol>
-      <p>
-        This could eat an hour or more per documentation site. And the result was always incomplete — you'd either include too much noise or miss important sections. The quality of the grounded AI depended entirely on how thorough your URL collection was, and doing it by hand guaranteed it wouldn't be thorough enough.
-      </p>
+    <h2>The URL Collection Problem</h2>
+    <p>
+      To ground an LLM in a technology's documentation, you need to understand the entire structure of the
+      documentation site. And
+      most documentation sites are massive.
+      Google Cloud has thousands of pages. AWS documentation spans hundreds of services. Even a focused framework like
+      Next.js has docs spread across dozens of nested paths.
+    </p>
+    <p>
+      To manually create a new AI-powered reference guide, the process would look like this:
+    </p>
+    <ol>
+      <li>Go to the documentation site</li>
+      <li>Click around trying to find the sitemap</li>
+      <li>Open the XML in a browser tab</li>
+      <li>Realize it's a sitemap index pointing to more sitemaps</li>
+      <li>Open each nested sitemap manually</li>
+      <li>Copy URLs one at a time, or try to parse the XML manually</li>
+      <li>Realize half the URLs are for older API versions you don't need</li>
+      <li>Give up and just grab the top-level pages, hoping that's enough</li>
+    </ol>
+    <p>
+      This could eat an hour or more per documentation site. And the result was always incomplete — you'd either include
+      too much noise or miss important sections. The quality of the grounded AI depended entirely on how thorough your
+      URL collection was, and doing it by hand guaranteed it wouldn't be thorough enough.
+    </p>
 
-      <h2>Why Existing Tools Didn't Work</h2>
-      <p>
-        I looked for solutions. Sitemap validators exist but they check structure, not extract URLs. Web scrapers are overkill — I didn't need page content, just the URL list. Browser-based XML viewers show the raw sitemap but don't let you filter or copy URLs in bulk.
-      </p>
-      <p>
-        None of them solved my specific problem: <em>Given a domain, find all its sitemaps, extract every documentation URL, let me filter by keyword, and copy the result to my clipboard — in under a minute.</em>
-      </p>
+    <h2>Why Existing Tools Didn't Work</h2>
+    <p>
+      I looked for solutions. Sitemap extractors exist, but they require you to provide the XML link. Web scrapers are
+      overkill, and too time consuming. Browser-based XML viewers show the raw sitemap but don't
+      let you filter or copy URLs in bulk.
+    </p>
+    <p>
+      None of them solved my specific problem: <em>Given a domain, find all its sitemaps, extract every documentation
+        URL, filter by keyword for a specific topic, and copy the result to my clipboard in under a minute.</em>
+    </p>
 
-      <h2>So I Built One</h2>
-      <p>
-        The first version was a Google Apps Script web app — a single <code>Code.gs</code> backend and an <code>Index.html</code> frontend. Enter a domain, and it checks <code>robots.txt</code> for sitemap directives, falls back to <code>/sitemap.xml</code>, then recursively parses every sitemap index and URL set it finds.
-      </p>
-      <p>
-        The URLs come back deduplicated and displayed in a clean list. A keyword filtering UI — include and exclude filters with a tag-bubble interface — lets you narrow down to exactly the paths you care about. One click copies the filtered list to your clipboard. Paste it into NotebookLM and you've got an expert guide grounded in official sources.
-      </p>
-      <p>
-        The first time I used it on <code>cloud.google.com</code>, it discovered 8 nested sitemaps and extracted over 4,000 documentation URLs in about 15 seconds. I filtered down to the Cloud Run docs, copied 200 URLs, and pasted them into NotebookLM. Suddenly I had a chatbot that could answer Cloud Run questions with citations to the actual documentation — no hallucinations.
-      </p>
-      <p>
-        That moment — going from "I need to read 200 doc pages" to "I have an expert I can ask" — was when I knew this workflow was something bigger than a utility script.
-      </p>
+    <h2>So I Built One</h2>
+    <p>
+      The first version was a Google Apps Script web app — a single <code>Code.gs</code> backend and an
+      <code>Index.html</code> frontend. Enter a domain, and it checks <code>robots.txt</code> for sitemap directives,
+      falls back to <code>/sitemap.xml</code>, then recursively parses every sitemap index and URL set it finds.
+    </p>
+    <p>
+      The URLs come back deduplicated and displayed in a clean list. A keyword filtering UI — include and exclude
+      filters with a tag-bubble interface — lets you narrow down to exactly the paths you care about. One click copies
+      the filtered list to your clipboard. Paste it into NotebookLM and you've got an expert guide grounded in official
+      sources.
+    </p>
+    <p>
+      The first time I used it on <code>docs.stripe.com</code>, it discovered nested sitemaps and extracted around 3,800
+      documentation URLs in under a minute. I filtered down to the Payments docs, copied the relevant URLs, and pasted
+      them into NotebookLM. Suddenly I had a chatbot that could answer Stripe Payments questions with citations to the
+      actual documentation — no hallucinations.
+    </p>
+    <p>
+      In just one day, I had created interactive guides for my team's entire tech stack. That same week, we were
+      evaluating vendors for a new product. I built guides for every option we were considering so we could compare
+      their offerings side by side, grounded in their actual documentation and product sites instead of sales decks.
+      Because NotebookLM notebooks are shareable, I was able to distribute these guides across my team and eventually
+      the broader department. What started as a personal productivity hack became something that enhanced how the whole
+      team found answers and made decisions.
+    </p>
 
-      <h2>What I Didn't Expect</h2>
-      <p>
-        The Documentation Extractor was supposed to be a personal tool. A quick script to save me time before building NotebookLM notebooks. But the workflow it enabled — <strong>automated doc discovery → filtered extraction → AI grounding</strong> — turned out to be the seed of something larger.
-      </p>
-      <p>
-        What if instead of just extracting URLs for manual pasting, the tool could also fetch the content, process it, and power a chatbot directly? What if the sitemap extraction was just the first step in a pipeline that turned any documentation site into a conversational AI?
-      </p>
-      <p>
-        That's how <strong>DocWeb</strong> was born — a full sitemap extraction and chatbot platform that evolved directly from this script. The Documentation Extractor is the "v0" prototype, the proof of concept that validated the core workflow. DocWeb takes it the rest of the way.
-      </p>
-      <p>
-        But I'm keeping the original tool alive. It's open source, it's free, and it solves a real problem in under a minute. Sometimes the simplest version is the one people actually use.
-      </p>
+    <h2>Where It Falls Short</h2>
+    <p>
+      The Documentation Extractor works well for small-to-medium documentation sites. But it has real constraints.
+    </p>
+    <p>
+      The most fundamental one: the tool only works if the site has a well-structured XML sitemap. Sites that rely
+      entirely on
+      JavaScript rendering, or that don't maintain a sitemap at all, will return nothing. It's a limitation that
+      narrows the tool's usefulness from the start.
+    </p>
+    <p>
+      Then there's scale. Google Apps Script has a 6-minute execution limit per call. A site like
+      <code>docs.stripe.com</code> with ~3,800 URLs processes fine. But a domain like <code>cloud.google.com</code> with
+      100,000+ URLs across dozens of nested sitemaps will time out before extraction completes. Because of Google Apps
+      Script's execution limit, you either get everything or nothing.
+    </p>
+    <p>
+      There's also no progress feedback. Because <code>google.script.run</code> is a single async call, the frontend
+      can't show how far along the extraction is. You get a spinner and then either a result or an error. For large
+      sites where processing takes 30+ seconds, this feels like the app is frozen.
+    </p>
+    <p>
+      Next, there is a ceiling on the destination side. NotebookLM caps sources at 50 or 300 depending on your Google
+      account tier. The keyword filtering helps you stay within that limit, but for large documentation sites it forces
+      you to make trade-offs between breadth and depth. You can't just dump an entire site's docs into a notebook and
+      expect comprehensive coverage.
+    </p>
+    <p>
+      Finally, it's worth noting that many large tech companies have since embedded chatbot assistants directly into
+      their
+      documentation, which can be more reliable than the extract-and-paste workflow for getting answers grounded in
+      official
+      docs. The
+      extractor is still useful for building broader AI knowledge bases, but for single-site Q&A, the native tools are
+      often better now.
+    </p>
 
-      <hr />
+    <h2>What I Didn't Expect</h2>
+    <p>
+      The Documentation Extractor was supposed to be a personal tool. A quick script to save me time before building
+      NotebookLM notebooks. But the workflow it enabled — <strong>automated site discovery → filtered extraction → AI
+        grounding</strong> — turned out to be the seed of something larger.
+    </p>
+    <p>
+      What if instead of just extracting URLs for manual pasting, the tool could also fetch the content, process it, and
+      power a chatbot directly? What if the sitemap extraction was just the first step in a pipeline that turned any
+      documentation site into a conversational AI?
+    </p>
+    <p>
+      That's how <strong><a href="https://docweb.net" target="_blank" rel="noopener noreferrer">DocWeb</a></strong> was
+      born — a full sitemap extraction and chatbot platform that evolved directly
+      from this script. The Documentation Extractor is the "v0" prototype, the proof of concept that validated the core
+      workflow. DocWeb takes it the rest of the way.
+    </p>
+    <p>
+      But I'm keeping the original tool alive. It's open source, it's free, and it solves a real problem in under a
+      minute. Sometimes the simplest version is the one people actually use.
+    </p>
 
-      <p>
-        <strong>Next up:</strong> In Part 2, I'll dive into the technical side — how sitemap parsing works, the edge cases in XML sitemap structures, and how batch fetching with exponential backoff keeps the tool reliable even on massive documentation sites.
-      </p>
-    </article>
+    <hr />
 
-    <!-- Blog CTA -->
-    <div class="blog-cta">
-      <div class="blog-cta__card">
-        <h2 class="blog-cta__title">See It in Action</h2>
-        <p class="blog-cta__text">Check out the Documentation Extractor project page for tech stack details, architecture overview, and the live demo.</p>
-        <div class="blog-cta__links">
-          <a href="../../projects/url-extractor/" class="btn btn--primary">View the Project</a>
-          <a href="../../" class="btn btn--outline">Back to Home</a>
-        </div>
+    <p>
+      <strong>Next up:</strong> In Part 2, I'll dive into how sitemap parsing works, the edge cases
+      in XML sitemap structures, and techniques to keep the tool reliable even on massive
+      documentation sites.
+    </p>
+  </article>
+
+  <!-- Blog CTA -->
+  <div class="blog-cta">
+    <div class="blog-cta__card">
+      <h2 class="blog-cta__title">See It in Action</h2>
+      <p class="blog-cta__text">Check out the Documentation Extractor project page for tech stack details, architecture
+        overview, and the live demo.</p>
+      <div class="blog-cta__links">
+        <a href="../../projects/url-extractor/" class="btn btn--primary">View the Project</a>
+        <a href="../../" class="btn btn--outline">Back to Home</a>
       </div>
     </div>
+  </div>
 
-    <!-- Series Nav -->
-    <div class="series-nav">
-      <div class="series-nav__inner">
-        <div></div>
-        <a href="../../blog/parsing-sitemaps-at-scale/" class="series-nav__link">
-          <span class="series-nav__label">Next in Series</span>
-          Part 2: Parsing Sitemaps at Scale
-        </a>
-      </div>
+  <!-- Series Nav -->
+  <div class="series-nav">
+    <div class="series-nav__inner">
+      <div></div>
+      <a href="../../blog/parsing-sitemaps-at-scale/" class="series-nav__link">
+        <span class="series-nav__label">Next in Series</span>
+        Part 2: Parsing Sitemaps at Scale
+      </a>
     </div>
+  </div>
 
-    <script type="module" src="/src/blog/why-i-built-url-extractor.js"></script>
-  </body>
+  <script type="module" src="/src/blog/why-i-built-url-extractor.js"></script>
+</body>
+
 </html>

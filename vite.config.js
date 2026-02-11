@@ -13,6 +13,8 @@ export default defineConfig({
         'blog-parsing-sitemaps': resolve(__dirname, 'blog/parsing-sitemaps-at-scale/index.html'),
         'blog-developing-docweb': resolve(__dirname, 'blog/developing-docweb/index.html'),
         'blog-beyond-documentation': resolve(__dirname, 'blog/beyond-documentation/index.html'),
+        'utm-shield': resolve(__dirname, 'projects/utm-shield/index.html'),
+        'blog-utm-tracking': resolve(__dirname, 'blog/why-utm-tracking-breaks/index.html'),
       },
     },
   },

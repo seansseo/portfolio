@@ -1,120 +1,166 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Documentation Extractor — Extract documentation URLs from any site's XML sitemaps for NotebookLM and AI knowledge tools." />
-    <title>Documentation Extractor — Sean Seo</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
-  </head>
-  <body>
-    <!-- Project Hero -->
-    <section class="project-hero">
-      <div class="container project-hero__content">
-        <a href="../../" class="project-hero__back">&larr; Back to Home</a>
-        <span class="badge project-hero__badge">Data Layer</span>
-        <h1 class="project-hero__title">Documentation Extractor</h1>
-        <p class="project-hero__subtitle">
-          Enter any domain, discover its XML sitemaps, and extract every documentation URL — filtered and ready to paste into NotebookLM or any AI knowledge tool. Turn any doc site into an instant expert guide.
-        </p>
-        <div class="project-hero__actions">
-          <a href="https://github.com/seansseo/documentation-extractor" target="_blank" rel="noopener noreferrer" class="btn btn--primary">View on GitHub</a>
-          <a href="https://script.google.com/macros/s/AKfycbzgV2O-n-SXwf6UFRpaFecys6rdFitA4kZZEov9eMQKX4GHvlbkt9KCCbXsR0wgOdomLQ/exec" target="_blank" rel="noopener noreferrer" class="btn btn--outline">Live Demo</a>
-        </div>
-      </div>
-    </section>
 
-    <!-- Screenshot -->
-    <div class="container">
-      <div class="project-screenshot">
-        <p>Screenshot coming soon</p>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Documentation Extractor — Extract documentation URLs from any site's XML sitemaps for NotebookLM and AI knowledge tools." />
+  <title>Documentation Extractor — Sean Seo</title>
+  <script>(function () { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t) })()</script>
+</head>
+
+<body>
+  <!-- Project Hero -->
+  <section class="project-hero">
+    <div class="container project-hero__content">
+      <a href="../../" class="project-hero__back">&larr; Back to Home</a>
+      <span class="badge project-hero__badge">Data Layer</span>
+      <h1 class="project-hero__title">Documentation Extractor</h1>
+      <p class="project-hero__subtitle">
+        Enter any domain, discover its XML sitemaps, and extract every documentation URL — filtered and ready to paste
+        into NotebookLM or any AI knowledge tool. Turn any doc site into an instant expert guide.
+      </p>
+      <div class="project-hero__actions">
+        <a href="https://github.com/seansseo/documentation-extractor" target="_blank" rel="noopener noreferrer"
+          class="btn btn--primary">View on GitHub</a>
+        <a href="https://script.google.com/macros/s/AKfycbzgV2O-n-SXwf6UFRpaFecys6rdFitA4kZZEov9eMQKX4GHvlbkt9KCCbXsR0wgOdomLQ/exec"
+          target="_blank" rel="noopener noreferrer" class="btn btn--outline">Live Demo</a>
       </div>
     </div>
+  </section>
 
-    <!-- Problem -->
-    <section class="project-section">
-      <div class="container">
-        <h2 class="project-section__title reveal">The Problem</h2>
-        <div class="project-section__text reveal">
-          <p>
-            LLMs hallucinate. Ask one about a specific API parameter, CLI flag, or configuration schema and there's a good chance it'll confidently give you something that doesn't exist. The training data is often outdated or generic — and for technical documentation, "close enough" isn't good enough.
-          </p>
-          <p>
-            The fix is grounding: feed the model official, up-to-date documentation so it has the real source of truth. Tools like NotebookLM make this easy — if you have the URLs. But most documentation sites have hundreds or thousands of pages spread across nested sitemaps. Manually hunting for the right URLs is tedious and incomplete.
-          </p>
-          <p>
-            I kept running into this friction every time I wanted to create an AI-powered reference for a new technology. The Documentation Extractor was built to eliminate it.
-          </p>
+  <!-- Screenshots -->
+  <div class="container">
+    <div class="project-screenshot">
+      <img src="../../images/url-extractor-extracting.png" alt="Extracting URLs from a sitemap" />
+    </div>
+  </div>
+
+  <!-- Problem -->
+  <section class="project-section">
+    <div class="container">
+      <h2 class="project-section__title reveal">The Problem</h2>
+      <div class="project-section__text reveal">
+        <p>
+          LLMs hallucinate often, especially when asked for information on complex and frequently updated technical
+          documentation. Ask
+          about a specific API parameter, CLI flag, or configuration schema and there's a good chance it'll confidently
+          give you something that doesn't exist. The training data is often outdated or generic — and for technical
+          documentation, "close enough" isn't good enough.
+        </p>
+        <p>
+          The fix is grounding the model with official, up-to-date documentation so it has the real source of truth.
+          Tools like NotebookLM make this easy — if you have the URLs. But most documentation sites have hundreds or
+          thousands of pages spread across nested sitemaps. Manually hunting for the right URLs is tedious and
+          incomplete.
+        </p>
+        <p>
+          I kept running into this friction every time I wanted to create an AI-powered reference for a new technology.
+          The Documentation Extractor was built to eliminate it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution -->
+  <section class="project-section">
+    <div class="container">
+      <h2 class="project-section__title reveal">The Solution</h2>
+      <div class="project-section__text reveal">
+        <p>
+          Enter a domain and the Documentation Extractor discovers its sitemaps — checking <code>robots.txt</code> for
+          directives and falling back to common paths. It recursively parses every sitemap index, fetches URLs in
+          batches with exponential-backoff retry, and deduplicates the results.
+        </p>
+        <p>
+          A keyword filtering UI lets you narrow results in real time — include or exclude URL paths with a tag-bubble
+          interface — then copy the filtered list to your clipboard with one click. Paste directly into NotebookLM and
+          you've got an expert guide grounded in official sources, built in seconds instead of hours.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Limitations -->
+  <section class="project-section">
+    <div class="container">
+      <h2 class="project-section__title reveal">Limitations</h2>
+      <div class="project-section__text reveal">
+        <p>
+          The Documentation Extractor was built as a lightweight prototype, and it has several limiting constraints.
+        </p>
+        <ul>
+          <li><strong>Requires a well-structured sitemap.</strong> The tool relies on a valid <code>robots.txt</code>
+            pointing to XML sitemaps, or a <code>/sitemap.xml</code> at the root. Sites without this setup return no
+            results.</li>
+          <li><strong>Large sitemaps time out.</strong> Google Apps Script has a 6-minute execution limit. Sites with
+            very large sitemaps (e.g., <code>cloud.google.com</code> with 100,000+ URLs) will exceed this, causing the
+            app to fail. It works best on small-to-medium documentation sites.</li>
+          <li><strong>No progress feedback.</strong> Because <code>google.script.run</code> is a single async call,
+            there's no way to stream progress back to the UI. The spinner shows until processing either completes or
+            times out.</li>
+          <li><strong>Apps Script quota limits.</strong> <code>UrlFetchApp</code> is subject to daily quota limits.
+            Heavy use may trigger rate limiting even with exponential backoff.</li>
+          <li><strong>NotebookLM source limits.</strong> NotebookLM caps sources at 50 or 300 depending on your Google
+            account tier. The keyword filtering helps you stay within that limit, but it significantly constrains the
+            depth and coverage of the guides you can build from large documentation sites.</li>
+          <li><strong>Native documentation chatbots.</strong> Many large tech companies now embed chatbot assistants
+            directly into their documentation sites, which can be more reliable for single-site Q&A.</li>
+        </ul>
+        <p>
+          For a more fully featured version that addresses some of these constraints, see <a
+            href="../docweb/">DocWeb</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="project-section">
+    <div class="container">
+      <h2 class="project-section__title reveal">Tech Stack</h2>
+      <div class="reveal">
+        <div class="tech-stack">
+          <span class="badge">Google Apps Script</span>
+          <span class="badge">HTML5 / JavaScript</span>
+          <span class="badge">Tailwind CSS</span>
+          <span class="badge">XML Sitemap Parsing</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Solution -->
-    <section class="project-section">
-      <div class="container">
-        <h2 class="project-section__title reveal">The Solution</h2>
-        <div class="project-section__text reveal">
-          <p>
-            Enter a domain and the Documentation Extractor discovers its sitemaps — checking <code>robots.txt</code> for directives and falling back to common paths. It recursively parses every sitemap index, fetches URLs in batches with exponential-backoff retry, and deduplicates the results.
-          </p>
-          <p>
-            A keyword filtering UI lets you narrow results in real time — include or exclude URL paths with a tag-bubble interface — then copy the filtered list to your clipboard with one click. Paste directly into NotebookLM and you've got an expert guide grounded in official sources, built in seconds instead of hours.
-          </p>
-        </div>
+  <!-- Where It Fits -->
+  <section class="project-section">
+    <div class="container">
+      <h2 class="project-section__title reveal">Where It Fits</h2>
+      <div class="project-section__text reveal">
+        <p>
+          The Documentation Extractor is the "v0" prototype that proved out a core workflow: <strong>automated sitemap
+            discovery and URL extraction</strong>. That workflow became the starting point for <a
+            href="../docweb/">DocWeb</a>, a more fully featured sitemap extraction and chatbot platform that addresses
+          many of these limitations.
+        </p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Tech Stack -->
-    <section class="project-section">
-      <div class="container">
-        <h2 class="project-section__title reveal">Tech Stack</h2>
-        <div class="reveal">
-          <div class="tech-stack">
-            <span class="badge">Google Apps Script</span>
-            <span class="badge">HTML5 / JavaScript</span>
-            <span class="badge">Tailwind CSS</span>
-            <span class="badge">XML Sitemap Parsing</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Architecture Connection -->
-    <section class="project-section">
-      <div class="container">
-        <h2 class="project-section__title reveal">Where It Fits</h2>
-        <div class="project-section__text reveal">
-          <p>
-            The Documentation Extractor is the "v0" prototype that proved out a core workflow: <strong>automated sitemap discovery and URL extraction</strong>. That workflow became the starting point for <strong>DocWeb</strong>, a more fully featured sitemap extraction and chatbot platform currently in private beta.
-          </p>
-        </div>
-        <div class="architecture reveal">
-          <div class="architecture__grid">
-            <div class="arch-card" style="border-color: var(--accent);">
-              <div class="arch-card__icon">🔗</div>
-              <h3 class="arch-card__title">Documentation Extractor</h3>
-              <p class="arch-card__text">The prototype — automated sitemap discovery, URL extraction, and keyword filtering in a lightweight Apps Script web app.</p>
-            </div>
-            <div class="arch-card" style="border-color: var(--accent);">
-              <div class="arch-card__icon">🧠</div>
-              <h3 class="arch-card__title">DocWeb</h3>
-              <p class="arch-card__text">The evolution — full sitemap extraction platform with an integrated AI chatbot grounded in the extracted documentation.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="project-cta">
-      <div class="container reveal">
-        <h2 class="project-cta__title">Want the Full Story?</h2>
-        <p class="project-cta__text">Read about the LLM hallucination problem that sparked this tool and the workflow that led to DocWeb.</p>
+  <!-- CTA -->
+  <section class="project-cta">
+    <div class="container reveal">
+      <h2 class="project-cta__title">Want the Full Story?</h2>
+      <p class="project-cta__text">Read about the LLM hallucination problem that sparked this tool and the workflow that
+        led to DocWeb.</p>
+      <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
         <a href="../../blog/why-i-built-url-extractor/" class="btn btn--primary">Read the Blog Post</a>
+        <a href="../docweb/" class="btn btn--outline">View DocWeb Project</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <script type="module" src="/src/projects/url-extractor.js"></script>
-  </body>
+  <script type="module" src="/src/projects/url-extractor.js"></script>
+</body>
+
 </html>

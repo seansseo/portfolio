@@ -70,6 +70,8 @@ ul, ol {
   --accent-dim: rgba(14, 116, 144, 0.08);
   --secondary: #c45520;
   --secondary-dim: rgba(196, 85, 32, 0.1);
+  --purple: #5b21b6;
+  --purple-dim: rgba(91, 33, 182, 0.08);
 
   /* Typography */
   --font-body: 'Inter', system-ui, sans-serif;

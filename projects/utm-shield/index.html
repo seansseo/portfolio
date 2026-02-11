@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="UTM Shield | Chrome extension that validates UTM parameters and catches broken campaign tracking before it costs you data." />
+    <title>UTM Shield | Sean Seo</title>
+  </head>
+  <body>
+    <!-- Project Hero -->
+    <section class="project-hero">
+      <div class="container project-hero__content">
+        <a href="../../" class="project-hero__back">&larr; Back to Home</a>
+        <span class="badge badge--purple project-hero__badge">Intelligence Layer</span>
+        <span class="badge badge--channel project-hero__badge">Channel Layer</span>
+        <h1 class="project-hero__title">UTM Shield</h1>
+        <p class="project-hero__subtitle">
+          A Chrome extension that reads, validates, and QAs UTM parameters in real time. Catch broken tracking before campaigns go live, not after the data is already wrong.
+        </p>
+        <div class="project-hero__actions">
+          <a href="https://github.com/seansseo/utm-shield" target="_blank" rel="noopener noreferrer" class="btn btn--primary">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screenshot -->
+    <div class="container">
+      <div class="project-screenshot">
+        <p>Screenshot coming soon</p>
+      </div>
+    </div>
+
+    <!-- Problem -->
+    <section class="project-section">
+      <div class="container">
+        <h2 class="project-section__title reveal">The Problem</h2>
+        <div class="project-section__text reveal">
+          <p>
+            UTM parameters are the backbone of campaign attribution. Every marketing team relies on them to connect ad spend to conversions. But they break constantly: typos in source names, inconsistent capitalization, missing parameters, deprecated values that nobody updated.
+          </p>
+          <p>
+            The result is dirty data. Google Analytics reports fragment across misspelled campaign names. Attribution models fall apart. Teams make budget decisions based on numbers that don't reflect reality. And the worst part is that nobody notices until weeks later, when the damage is already done.
+          </p>
+          <p>
+            Most teams try to solve this with naming conventions in a spreadsheet. It works until someone forgets. There's no validation at the point where it matters: the moment a URL goes live.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Solution -->
+    <section class="project-section">
+      <div class="container">
+        <h2 class="project-section__title reveal">The Solution</h2>
+        <div class="project-section__text reveal">
+          <p>
+            UTM Shield lives in the browser where marketers already work. It reads UTM parameters from any URL on the current page and runs them through a validation engine that checks for common issues: missing required fields, inconsistent naming conventions, known typos, and deprecated values.
+          </p>
+          <p>
+            Validation results appear inline with clear pass/fail indicators. Issues are flagged with specific, actionable messages rather than vague errors. The goal is to catch problems at the point of creation, not in a post-campaign audit.
+          </p>
+          <p>
+            For teams, UTM Shield supports shared naming conventions so everyone validates against the same rules. No more "was it lowercase or title case for the source?" questions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="project-section">
+      <div class="container">
+        <h2 class="project-section__title reveal">Key Features</h2>
+        <div class="reveal">
+          <div class="architecture__grid">
+            <div class="arch-card">
+              <h3 class="arch-card__title">UTM Reader</h3>
+              <p class="arch-card__text">Parses and displays UTM parameters from any URL on the current page. See exactly what's being tracked at a glance.</p>
+            </div>
+            <div class="arch-card">
+              <h3 class="arch-card__title">Validation Engine</h3>
+              <p class="arch-card__text">Rules-based validation for required fields, naming patterns, capitalization consistency, and known issues.</p>
+            </div>
+            <div class="arch-card">
+              <h3 class="arch-card__title">QA Dashboard</h3>
+              <p class="arch-card__text">Summary view of all UTM parameters found on a page with pass/fail status. Export results for team review.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="project-section">
+      <div class="container">
+        <h2 class="project-section__title reveal">Tech Stack</h2>
+        <div class="reveal">
+          <div class="tech-stack">
+            <span class="badge badge--channel">Chrome Extension API</span>
+            <span class="badge badge--channel">JavaScript</span>
+            <span class="badge badge--channel">UTM Validation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Where It Fits -->
+    <section class="project-section">
+      <div class="container">
+        <h2 class="project-section__title reveal">Where It Fits</h2>
+        <div class="project-section__text reveal">
+          <p>
+            UTM Shield is the Channel Layer of the 3-Layer Marketing Stack. The Data Layer (DocWeb) structures information. The Intelligence Layer processes it. The Channel Layer is where marketing meets the real world, and where QA matters most.
+          </p>
+          <p>
+            Bad UTM parameters don't just create messy reports. They break the entire feedback loop between spend and results. UTM Shield ensures that the data entering your analytics platform is clean from the start, so every layer above it can be trusted.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="project-cta">
+      <div class="container reveal">
+        <h2 class="project-cta__title">Want the Full Story?</h2>
+        <p class="project-cta__text">Read about why UTM validation is the most overlooked problem in marketing operations.</p>
+        <a href="../../blog/why-utm-tracking-breaks/" class="btn btn--primary">Read the Blog Post</a>
+      </div>
+    </section>
+
+    <script type="module" src="/src/projects/utm-shield.js"></script>
+  </body>
+</html>

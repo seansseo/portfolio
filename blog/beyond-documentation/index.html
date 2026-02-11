@@ -1,173 +1,252 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="DocWeb isn't just for documentation. Any public website with a sitemap becomes a structured knowledge base — and that reframes how organizations should think about AI." />
-    <title>Beyond Documentation: Context Is the Real AI Moat — Sean Seo</title>
-    <script>(function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)})()</script>
-  </head>
-  <body>
-    <!-- Blog Header -->
-    <header class="blog-header">
-      <div class="container blog-header__content">
-        <a href="../../" class="blog-header__back">&larr; Back to Home</a>
-        <div class="blog-header__meta">
-          <span>Feb 6, 2026</span>
-          <span>&middot;</span>
-          <span>Part 4 of the Documentation Extractor Series</span>
-          <span>&middot;</span>
-          <span>9 min read</span>
-        </div>
-        <h1 class="blog-header__title">Beyond Documentation: Context Is the Real AI Moat</h1>
-        <p class="blog-header__subtitle">
-          DocWeb was built for documentation sites. But the underlying system works on any public website — and that changes how you should think about leveraging AI.
-        </p>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="DocWeb isn't just for documentation. Any public website with a sitemap becomes a structured knowledge base — and that reframes how organizations should think about AI." />
+  <title>Beyond Documentation: Context Is the Real AI Moat — Sean Seo</title>
+  <script>(function () { var t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t) })()</script>
+</head>
+
+<body>
+  <!-- Blog Header -->
+  <header class="blog-header">
+    <div class="container blog-header__content">
+      <a href="../../" class="blog-header__back">&larr; Back to Home</a>
+      <div class="blog-header__meta">
+        <span>Feb 6, 2026</span>
+        <span>&middot;</span>
+        <span>Part 4 of the Documentation Extractor Series</span>
+        <span>&middot;</span>
+        <span>9 min read</span>
       </div>
-    </header>
+      <h1 class="blog-header__title">Beyond Documentation: Context Is the Real AI Moat</h1>
+      <p class="blog-header__subtitle">
+        DocWeb was built for documentation sites. But the underlying system works on any public website — and that has
+        changed the way I think about leveraging AI.
+      </p>
+    </div>
+  </header>
 
-    <!-- Article Body -->
-    <article class="article">
-      <h2>A Tool That Doesn't Know Its Own Boundaries</h2>
-      <p>
-        I built DocWeb to solve a specific problem: grounding AI in official documentation. Enter a docs site, extract its structure, scrape the content, and chat with it. The entire pipeline — discovery, visualization, embedding, search — was designed around the mental model of "documentation."
-      </p>
-      <p>
-        Then someone pointed a DocWeb session at a marketing agency's website. It worked. The waterfall algorithm found the sitemap, extracted every service page and case study, built the graph, and Dex could answer questions about their capabilities as if it had read the whole site. Because it had.
-      </p>
-      <p>
-        That was the moment I realized: <strong>there's nothing documentation-specific about what DocWeb does.</strong> It discovers pages via sitemaps and navigation crawling. It scrapes and processes HTML into structured content. It embeds text and enables semantic search. None of that cares whether the content is API reference docs or a law firm's practice area pages. If a site is public and has a sitemap, DocWeb can map it, index it, and make it conversational.
-      </p>
+  <!-- Article Body -->
+  <article class="article">
+    <h2>A Tool Beyond Its Boundaries</h2>
+    <p>
+      I built DocWeb to solve a specific problem: grounding AI in official documentation. Enter a docs site, extract its
+      structure, scrape the content, and chat with it. The entire pipeline — discovery, visualization, embedding, search
+      — was designed around the mental model of "documentation."
+    </p>
+    <p>
+      Then I tried pointing a DocWeb session at a marketing agency's website. It worked. The waterfall algorithm found
+      the sitemap, extracted every service page and case study, built the graph, and Dex could answer questions about
+      their capabilities as if it had read the whole site. Because it had.
+    </p>
+    <p>
+      That was the moment I realized: <strong>there's nothing documentation-specific about what DocWeb does.</strong> It
+      discovers pages via sitemaps and navigation crawling. It scrapes and processes HTML into structured content. It
+      embeds text and enables semantic search. None of that cares whether the content is API reference docs or a law
+      firm's practice area pages. If a site is public and has a sitemap, DocWeb can map it, index it, and make it
+      conversational.
+    </p>
 
-      <h2>Use Cases I Didn't Design For</h2>
-      <p>
-        Once you stop thinking of DocWeb as a "documentation tool" and start thinking of it as a "turn any website into a searchable knowledge base" tool, the use cases multiply:
-      </p>
+    <h2>Use Cases I Didn't Design For</h2>
+    <p>
+      Once you stop thinking of DocWeb as a "documentation tool" and start thinking of it as a "turn any website into a
+      searchable knowledge base" tool, the use cases multiply:
+    </p>
 
-      <h3>SEO and Site Auditing</h3>
-      <p>
-        The graph visualization alone is valuable for SEO. Point DocWeb at your own site and you immediately see its information architecture — how pages cluster, where orphan pages live, which sections are deep and which are shallow. The discovery stats show you exactly how many URLs your sitemap covers versus what the navigation crawl finds. If there's a gap, those are pages that search engines might struggle to discover too.
-      </p>
-      <p>
-        Competitor analysis works the same way. Map a competitor's site, see how they structure their content, identify topic clusters they're investing in. The priority scoring algorithm — which rates pages by their path depth, segment keywords, and structural position — gives you a rough proxy for which pages the site considers most important.
-      </p>
+    <h3>SEO and Site Auditing</h3>
+    <p>
+      The graph visualization alone is valuable for SEO. Point DocWeb at your own site and you immediately see its
+      information architecture — how pages cluster, where orphan pages live, which sections are deep and which are
+      shallow. The discovery stats show you exactly how many URLs your sitemap covers versus what the navigation crawl
+      finds. If there's a gap, those are pages that search engines might struggle to discover too.
+    </p>
+    <p>
+      Competitor analysis works the same way. Map a competitor's site, see how they structure their content, identify
+      topic clusters they're investing in. The priority scoring algorithm — which rates pages by their path depth,
+      segment keywords, and structural position — gives you a rough proxy for which pages the site considers most
+      important.
+    </p>
 
-      <h3>Legal and Compliance</h3>
-      <p>
-        Large organizations publish terms of service, privacy policies, compliance documents, and regulatory filings across sprawling websites. Finding the specific clause you need means either knowing exactly where to look or reading through hundreds of pages. Feed the site into DocWeb and you can ask Dex: "What does the privacy policy say about data retention?" or "Which sections of the terms cover liability limitations?" The hybrid search surfaces the relevant passages, and the source citations point you to the exact page.
-      </p>
+    <h3>Legal and Compliance</h3>
+    <p>
+      Large organizations publish terms of service, privacy policies, compliance documents, and regulatory filings
+      across sprawling websites. Finding the specific clause you need means either knowing exactly where to look or
+      reading through hundreds of pages. Feed the site into DocWeb and you can ask Dex: "What does the privacy policy
+      say about data retention?" or "Which sections of the terms cover liability limitations?" The hybrid search
+      surfaces the relevant passages, and the source citations point you to the exact page.
+    </p>
 
-      <h3>Research and Competitive Intelligence</h3>
-      <p>
-        Any organization with a public website is broadcasting information about their products, pricing, positioning, and strategy. DocWeb turns that broadcast into a queryable database. Map a competitor's site before a strategy meeting and you can answer questions like "What integrations do they support?" or "How do they position their enterprise tier?" without manually clicking through dozens of pages.
-      </p>
+    <h3>Research and Competitive Intelligence</h3>
+    <p>
+      Any organization with a public website is broadcasting information about their products, pricing, positioning, and
+      strategy. DocWeb turns that broadcast into a queryable database. Map a competitor's site before a strategy meeting
+      and you can answer questions like "What integrations do they support?" or "How do they position their enterprise
+      tier?" without manually clicking through dozens of pages.
+    </p>
 
-      <h3>Knowledge Onboarding</h3>
-      <p>
-        New hires at any company face the same problem: there's a mountain of internal and external information they need to absorb, and most of it lives on websites — product docs, help centers, wikis, knowledge bases. A DocWeb session pointed at the company's public-facing docs gives new team members an instant Q&A interface for the product they're about to work on. It's not a replacement for internal onboarding, but it's a powerful supplement that's available from day one.
-      </p>
+    <h3>Knowledge Onboarding</h3>
+    <p>
+      New hires at any company face the same problem: there's a mountain of internal and external information they need
+      to absorb, and most of it lives on websites — product docs, help centers, wikis, knowledge bases. A DocWeb session
+      pointed at the company's public-facing docs gives new team members an instant Q&A interface for the product
+      they're about to work on. It's not a replacement for internal onboarding, but it's a powerful supplement that's
+      available from day one.
+    </p>
 
-      <h2>The Pattern: Context Determines Value</h2>
-      <p>
-        Every one of these use cases follows the same pattern. You take an LLM that knows a lot about everything in general but nothing specific about your domain, and you feed it targeted context so it can give useful, grounded answers. The LLM doesn't change. The model weights don't change. What changes is <strong>what the model has access to when it generates a response.</strong>
-      </p>
-      <p>
-        This is the most underappreciated insight in the current AI landscape: <strong>the value of an AI system is determined almost entirely by the quality and relevance of its context, not by the model itself.</strong>
-      </p>
-      <p>
-        Everyone has access to the same foundation models. GPT-4, Claude, Gemini — they're commodities. You can swap one for another and get roughly similar results for most tasks. What you can't swap is the context pipeline: the system that discovers, extracts, structures, and retrieves the specific information the model needs to answer a specific question accurately.
-      </p>
-      <p>
-        This is what I learned building the journey from the Documentation Extractor to DocWeb. The LLM call at the end — sending a prompt to Gemini with retrieved context and getting a response — is maybe 5% of the engineering effort. The other 95% is everything that happens before that call: sitemap discovery, content scraping, markdown conversion, text chunking, vector embedding, hybrid search, result ranking. <strong>Get the retrieval right and the AI is reliable. Get the retrieval wrong and no amount of prompt engineering will save you.</strong>
-      </p>
+    <h2>The Pattern: Context Determines Value</h2>
+    <p>
+      Every one of these use cases follows the same pattern. You take an LLM that knows a lot about everything in
+      general but nothing specific about your domain, and you feed it targeted context so it can give useful, grounded
+      answers. The LLM doesn't change. The model weights don't change. What changes is <strong>what the model has access
+        to when it generates a response.</strong>
+    </p>
+    <p>
+      This is the most underappreciated insight in the current AI landscape: <strong>the value of an AI system is
+        determined almost entirely by the quality and relevance of its context, not by the model itself.</strong>
+    </p>
+    <p>
+      Everyone has access to the same foundation models. GPT-4, Claude, Gemini — they're commodities. You can swap one
+      for another and get roughly similar results for most tasks. What you can't swap is the context pipeline: the
+      system that discovers, extracts, structures, and retrieves the specific information the model needs to answer a
+      specific question accurately.
+    </p>
+    <p>
+      This is what I learned building the journey from the Documentation Extractor to DocWeb. The LLM call at the end —
+      sending a prompt to Gemini with retrieved context and getting a response — is maybe 5% of the engineering effort.
+      The other 95% is everything that happens before that call: sitemap discovery, content scraping, markdown
+      conversion, text chunking, vector embedding, hybrid search, result ranking. <strong>Get the retrieval right and
+        the AI is reliable. Get the retrieval wrong and no amount of prompt engineering will save you.</strong>
+    </p>
 
-      <h2>Why Organizations Should Invest in Context</h2>
-      <p>
-        Most organizations approaching AI start with the model. "We need to implement GPT" or "Let's build a chatbot with Claude." They focus on prompt engineering, fine-tuning, and model selection. These things matter, but they're second-order concerns. The first-order question is: <strong>what context will this model have access to?</strong>
-      </p>
-      <p>
-        Think about it from the other direction. If you built a perfect retrieval system — one that could find exactly the right information for any query across all your company's knowledge — the choice of LLM almost wouldn't matter. Any modern foundation model, given the right context, will generate a useful answer. The quality ceiling is set by retrieval, not generation.
-      </p>
-      <p>
-        Here's what investing in context actually looks like:
-      </p>
+    <h2>Why Organizations Should Invest in Context</h2>
+    <p>
+      Most organizations approaching AI start with the model. "We need to implement GPT" or "Let's build a chatbot with
+      Claude." They focus on prompt engineering, fine-tuning, and model selection. These things matter, but they're
+      second-order concerns. The first-order question is: <strong>what context will this model have access to?</strong>
+    </p>
+    <p>
+      Think about it from the other direction. If you built a perfect retrieval system — one that could find exactly the
+      right information for any query across all your company's knowledge — the choice of LLM almost wouldn't matter.
+      Any modern foundation model, given the right context, will generate a useful answer. The quality ceiling is set by
+      retrieval, not generation.
+    </p>
+    <p>
+      Here's what investing in context actually looks like:
+    </p>
 
-      <h3>Map your own surface area</h3>
-      <p>
-        Most organizations don't have a clear picture of their own public-facing content. Marketing has landing pages. Product has documentation. Legal has compliance pages. Support has a help center. Engineering has a developer portal. Each team manages their section, but nobody has a unified view of what the organization is actually saying to the world.
-      </p>
-      <p>
-        Crawling your own site is the first step. How many pages exist? How are they structured? Where are the gaps? Where is content duplicated or contradictory? This map becomes the foundation for any AI system you build on top — and it often reveals content problems you didn't know you had.
-      </p>
+    <h3>Map your own surface area</h3>
+    <p>
+      Most organizations don't have a clear picture of their own public-facing content. Marketing has landing pages.
+      Product has documentation. Legal has compliance pages. Support has a help center. Engineering has a developer
+      portal. Each team manages their section, but nobody has a unified view of what the organization is actually saying
+      to the world.
+    </p>
+    <p>
+      Crawling your own site is the first step. How many pages exist? How are they structured? Where are the gaps? Where
+      is content duplicated or contradictory? This map becomes the foundation for any AI system you build on top — and
+      it often reveals content problems you didn't know you had.
+    </p>
 
-      <h3>Structure your knowledge for retrieval</h3>
-      <p>
-        Having content isn't enough. The content needs to be <em>retrievable</em> — which means structured, chunked, and embedded in a way that a search system can match queries to relevant passages. This is the gap between "we have a knowledge base" and "our AI can actually find answers in it."
-      </p>
-      <p>
-        The technical details matter: how you chunk text (too small and you lose context; too large and you dilute relevance), how you embed it (which model, which dimensions), how you search it (vector-only, keyword-only, or hybrid). These are engineering decisions that directly determine whether your AI system gives great answers or mediocre ones.
-      </p>
+    <h3>Structure your knowledge for retrieval</h3>
+    <p>
+      Having content isn't enough. The content needs to be <em>retrievable</em> — which means structured, chunked, and
+      embedded in a way that a search system can match queries to relevant passages. This is the gap between "we have a
+      knowledge base" and "our AI can actually find answers in it."
+    </p>
+    <p>
+      The technical details matter: how you chunk text (too small and you lose context; too large and you dilute
+      relevance), how you embed it (which model, which dimensions), how you search it (vector-only, keyword-only, or
+      hybrid). These are engineering decisions that directly determine whether your AI system gives great answers or
+      mediocre ones.
+    </p>
 
-      <h3>Keep context fresh</h3>
-      <p>
-        Static context degrades. Products change, policies update, new features launch. An AI system grounded in six-month-old documentation will confidently give outdated answers. The context pipeline needs to be a continuous process, not a one-time setup. DocWeb addresses this with 24-hour cache TTLs — a blunt instrument, but it ensures the system re-crawls regularly. For internal systems, you'd want tighter integration: webhook-triggered re-indexing when docs are published, or scheduled crawls that diff against the previous version.
-      </p>
+    <h3>Keep context fresh</h3>
+    <p>
+      Static context degrades. Products change, policies update, new features launch. An AI system grounded in
+      six-month-old documentation will confidently give outdated answers. The context pipeline needs to be a continuous
+      process, not a one-time setup. DocWeb addresses this with 24-hour cache TTLs — a blunt instrument, but it ensures
+      the system re-crawls regularly. For internal systems, you'd want tighter integration: webhook-triggered
+      re-indexing when docs are published, or scheduled crawls that diff against the previous version.
+    </p>
 
-      <h2>The Moat Is the Pipeline</h2>
-      <p>
-        There's a common debate about where the "moat" is in AI — is it the model, the data, the distribution, the UX? For applied AI (as opposed to frontier model research), I think the moat is the <strong>context pipeline</strong>.
-      </p>
-      <p>
-        Models will keep getting cheaper and more capable. Today's state-of-the-art will be tomorrow's commodity. But the system that discovers, extracts, structures, embeds, and retrieves domain-specific knowledge — that's custom to every organization and every use case. It's the hard, unglamorous engineering work that makes AI actually useful rather than just impressive.
-      </p>
-      <p>
-        The Documentation Extractor was a crude version of this pipeline: discover sitemaps, extract URLs, copy to clipboard, paste into NotebookLM. DocWeb is a more refined version: waterfall discovery, content scraping, vector embeddings, hybrid search, grounded chatbot. But the fundamental insight is the same one I had on day one: <strong>if you want AI to give you real answers, you have to give it real sources.</strong>
-      </p>
+    <h2>The Moat Is the Pipeline</h2>
+    <p>
+      There's a common debate about where the "moat" is in AI — is it the model, the data, the distribution, the UX? For
+      applied AI (as opposed to frontier model research), I believe that the moat is the <strong>context
+        pipeline</strong>.
+    </p>
+    <p>
+      Models will keep getting cheaper and more capable. Today's state-of-the-art will be tomorrow's commodity. But the
+      system that discovers, extracts, structures, embeds, and retrieves domain-specific knowledge — that's custom to
+      every organization and every use case. It's the hard, unglamorous engineering work that makes AI actually useful
+      rather than just impressive.
+    </p>
+    <p>
+      The Documentation Extractor was a crude version of this pipeline: discover sitemaps, extract URLs, copy to
+      clipboard, paste into NotebookLM. DocWeb is a more refined version: waterfall discovery, content scraping, vector
+      embeddings, hybrid search, grounded chatbot. But the fundamental insight is the same one I had on day one:
+      <strong>if you want AI to give you real answers, you have to give it real sources.</strong>
+    </p>
 
-      <h2>What's Next</h2>
-      <p>
-        DocWeb is in private beta, and the roadmap is focused on making the context pipeline more powerful:
-      </p>
-      <ul>
-        <li><strong>Scheduled re-crawling</strong> — automatic freshness updates on a configurable cadence, with diff detection so only changed pages get re-embedded</li>
-        <li><strong>Multi-site sessions</strong> — combine multiple websites into a single knowledge base so you can ask questions that span sources</li>
-        <li><strong>Export and integration</strong> — bring the structured context into your own tools, whether that's a custom chatbot, a Slack integration, or an internal search engine</li>
-      </ul>
-      <p>
-        The core thesis hasn't changed since I wrote that first Apps Script to parse XML sitemaps: <strong>the web is full of knowledge, most of it is public, and the tools for turning it into AI-ready context are still surprisingly primitive.</strong> That's the gap I'm building in.
-      </p>
+    <h2>What's Next</h2>
+    <p>
+      <a href="https://docweb.net" target="_blank" rel="noopener noreferrer">DocWeb</a> is live, and the roadmap is
+      focused on making the context pipeline more powerful:
+    </p>
+    <ul>
+      <li><strong>Scheduled re-crawling</strong> — automatic freshness updates on a configurable cadence, with diff
+        detection so only changed pages get re-embedded</li>
+      <li><strong>Multi-site sessions</strong> — combine multiple websites into a single knowledge base so you can ask
+        questions that span sources</li>
+      <li><strong>Export and integration</strong> — bring the structured context into your own tools, whether that's a
+        custom chatbot, a Slack integration, or an internal search engine</li>
+    </ul>
+    <p>
+      The core thesis hasn't changed since I wrote that first Apps Script to parse XML sitemaps: <strong>the web is full
+        of knowledge, most of it is public, and the tools for turning it into AI-ready context are still surprisingly
+        primitive.</strong> That's the gap I'm building in.
+    </p>
 
-      <hr />
+    <hr />
 
-      <p>
-        This is the final post in the Documentation Extractor series. If you want to try the tool that started it all, the <a href="https://github.com/seansseo/documentation-extractor">Documentation Extractor is open source</a>. For DocWeb access, reach out via the <a href="../../#contact">contact section</a>.
-      </p>
-    </article>
+    <p>
+      This is the final post in the Documentation Extractor series. If you want to try the tool that started it all, the
+      <a href="https://github.com/seansseo/documentation-extractor">Documentation Extractor is open source</a>. Or go
+      straight to <a href="https://docweb.net" target="_blank" rel="noopener noreferrer">DocWeb</a> to see the full
+      platform.
+    </p>
+  </article>
 
-    <!-- Blog CTA -->
-    <div class="blog-cta">
-      <div class="blog-cta__card">
-        <h2 class="blog-cta__title">Read the Full Series</h2>
-        <p class="blog-cta__text">From a weekend script to an AI-powered platform — the complete Documentation Extractor series.</p>
-        <div class="blog-cta__links">
-          <a href="../../blog/why-i-built-url-extractor/" class="btn btn--primary">Start from Part 1</a>
-          <a href="../../" class="btn btn--outline">Back to Home</a>
-        </div>
+  <!-- Blog CTA -->
+  <div class="blog-cta">
+    <div class="blog-cta__card">
+      <h2 class="blog-cta__title">Read the Full Series</h2>
+      <p class="blog-cta__text">From a weekend script to an AI-powered platform — the complete Documentation Extractor
+        series.</p>
+      <div class="blog-cta__links">
+        <a href="../../blog/why-i-built-url-extractor/" class="btn btn--primary">Start from Part 1</a>
+        <a href="../../" class="btn btn--outline">Back to Home</a>
       </div>
     </div>
+  </div>
 
-    <!-- Series Nav -->
-    <div class="series-nav">
-      <div class="series-nav__inner">
-        <a href="../../blog/developing-docweb/" class="series-nav__link">
-          <span class="series-nav__label">Previous in Series</span>
-          Part 3: Developing DocWeb
-        </a>
-        <div></div>
-      </div>
+  <!-- Series Nav -->
+  <div class="series-nav">
+    <div class="series-nav__inner">
+      <a href="../../blog/developing-docweb/" class="series-nav__link">
+        <span class="series-nav__label">Previous in Series</span>
+        Part 3: Developing DocWeb
+      </a>
+      <div></div>
     </div>
+  </div>
 
-    <script type="module" src="/src/blog/beyond-documentation.js"></script>
-  </body>
+  <script type="module" src="/src/blog/beyond-documentation.js"></script>
+</body>
+
 </html>

@@ -145,6 +145,12 @@
   border-color: rgba(196, 85, 32, 0.2);
 }
 
+.badge--channel {
+  background: var(--purple-dim);
+  color: var(--purple);
+  border-color: rgba(109, 40, 217, 0.2);
+}
+
 .badge--muted {
   background: var(--surface);
   color: var(--text-muted);

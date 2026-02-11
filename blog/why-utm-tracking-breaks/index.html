@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="UTM parameters break constantly, and most teams don't notice until the data is already wrong. Here's why validation at the point of creation matters." />
+    <title>Why UTM Tracking Breaks | Sean Seo</title>
+  </head>
+  <body>
+    <!-- Blog Header -->
+    <header class="blog-header">
+      <div class="container blog-header__content">
+        <a href="../../" class="blog-header__back">&larr; Back to Home</a>
+        <div class="blog-header__meta">
+          <span>Feb 10, 2026</span>
+          <span>&middot;</span>
+          <span>UTM Shield Series</span>
+          <span>&middot;</span>
+          <span>8 min read</span>
+        </div>
+        <h1 class="blog-header__title">Why UTM Tracking Breaks (And Nobody Notices Until It's Too Late)</h1>
+        <p class="blog-header__subtitle">
+          UTM parameters are simple in theory. In practice, they're the most fragile part of your entire marketing stack.
+        </p>
+      </div>
+    </header>
+
+    <!-- Article Body -->
+    <article class="article">
+      <h2>The Hidden Cost of Bad UTMs</h2>
+      <p>
+        Every marketer knows UTM parameters. You append them to URLs so Google Analytics can tell you where traffic came from, which campaign drove it, and what content converted. It's the foundation of digital attribution.
+      </p>
+      <p>
+        The problem is that UTMs are just strings. There's no schema, no validation, no guardrails. A typo in <code>utm_source</code> doesn't throw an error. It just silently creates a new row in your analytics that fragments your data. And you won't notice until someone pulls a report weeks later and asks why "google" and "Google" and "gogle" are three separate sources.
+      </p>
+      <p>
+        I've seen this play out at every company I've worked with. The spreadsheet with naming conventions exists. People follow it for the first month. Then someone copies a URL from Slack, edits it in a hurry, and the drift begins.
+      </p>
+
+      <h2>How UTMs Actually Break</h2>
+      <p>
+        It's rarely one catastrophic mistake. It's a hundred small ones that compound over time. Here are the patterns I kept seeing:
+      </p>
+      <ul>
+        <li><strong>Capitalization drift.</strong> GA4 treats "Facebook" and "facebook" as different sources. One team member capitalizes, another doesn't. Now your Facebook data is split across two rows.</li>
+        <li><strong>Missing parameters.</strong> Someone includes <code>utm_source</code> and <code>utm_medium</code> but forgets <code>utm_campaign</code>. The click registers, but you can't attribute it to a specific campaign.</li>
+        <li><strong>Deprecated values.</strong> A campaign name from Q1 gets reused in Q3 with different creative. Now two campaigns share an attribution bucket and you can't separate performance.</li>
+        <li><strong>Encoding issues.</strong> Spaces become <code>%20</code> or <code>+</code> depending on where the URL was built. Special characters corrupt the parameter entirely.</li>
+        <li><strong>Platform overwrites.</strong> Some ad platforms append their own UTM parameters, overwriting the ones you set. If you don't check the final URL, your carefully crafted parameters are gone.</li>
+      </ul>
+
+      <h2>Why Spreadsheets Don't Solve This</h2>
+      <p>
+        The standard solution is a UTM builder spreadsheet. You define your naming conventions, create a template with dropdown menus, and ask everyone to use it. This works in theory. In practice, it has two fatal flaws.
+      </p>
+      <p>
+        First, it's disconnected from the workflow. Marketers build URLs in ad platforms, email tools, CMS editors, and Slack messages. Asking them to switch to a spreadsheet, build the URL, copy it back, and paste it into the right field adds friction to every single link they create. Friction means shortcuts. Shortcuts mean broken UTMs.
+      </p>
+      <p>
+        Second, there's no validation after creation. Even if someone uses the spreadsheet to build the URL, there's nothing stopping the parameters from being modified downstream. A redirect strips the query string. A CMS URL-encodes special characters. Someone manually edits the URL and introduces a typo. The spreadsheet can't catch any of this.
+      </p>
+
+      <h2>Validation at the Point of Creation</h2>
+      <p>
+        The insight behind UTM Shield is simple: validation needs to happen where marketers already work, at the moment they're creating or reviewing URLs. Not in a separate spreadsheet. Not in a post-campaign audit. Right there in the browser.
+      </p>
+      <p>
+        A Chrome extension sees every URL on the page. It can parse UTM parameters in real time, check them against your naming conventions, and flag issues before anyone clicks publish. The feedback loop is immediate: you see the problem, you fix it, you move on.
+      </p>
+      <p>
+        This is the same principle behind linters in software development. You don't wait until production to find bugs. You catch them in the editor, at the moment of writing. UTM Shield brings that concept to marketing operations.
+      </p>
+
+      <h2>What Good Validation Looks Like</h2>
+      <p>
+        Not all validation is useful. A tool that just checks "are UTM parameters present?" doesn't help much. Real validation needs context:
+      </p>
+      <ul>
+        <li><strong>Required fields.</strong> Every URL should have at minimum <code>utm_source</code>, <code>utm_medium</code>, and <code>utm_campaign</code>.</li>
+        <li><strong>Naming conventions.</strong> If your team uses lowercase for sources, flag any URL with uppercase characters in <code>utm_source</code>.</li>
+        <li><strong>Known values.</strong> Validate against a list of approved sources, mediums, and campaign names. Flag anything that doesn't match.</li>
+        <li><strong>Pattern matching.</strong> Campaign names should follow a consistent format (e.g., <code>q1-2026_product-launch_email</code>). Flag names that don't match the pattern.</li>
+        <li><strong>Actionable messages.</strong> Don't just say "invalid." Say "utm_source is 'Goolge', did you mean 'google'?"</li>
+      </ul>
+
+      <h2>The Channel Layer</h2>
+      <p>
+        UTM Shield is part of what I call the Channel Layer in the 3-Layer Marketing Stack. The Data Layer (DocWeb) structures and extracts information. The Intelligence Layer processes it with AI. The Channel Layer is where marketing touches the real world: ads, emails, landing pages, campaign links.
+      </p>
+      <p>
+        The Channel Layer is also where QA matters most. A bug in your data pipeline is fixable. A bug in thousands of live campaign URLs is not. By the time you discover bad UTM parameters in your analytics, the data is already polluted. Prevention is the only real solution.
+      </p>
+      <p>
+        That's the thesis behind every tool I build: the value of AI in marketing isn't generating more content. It's validating what's already there. UTM Shield is the simplest expression of that idea. No AI needed, just rules, patterns, and immediate feedback at the moment it matters.
+      </p>
+
+      <hr />
+
+      <p>
+        UTM Shield is available now as a Chrome extension. If you've ever spent an afternoon cleaning up fragmented campaign data in Google Analytics, this is the tool I wish I'd had years ago.
+      </p>
+    </article>
+
+    <!-- CTA -->
+    <section class="blog-cta">
+      <div class="blog-cta__card">
+        <h2 class="blog-cta__title">Try UTM Shield</h2>
+        <p class="blog-cta__text">Catch broken UTM parameters before they cost you data.</p>
+        <div class="blog-cta__links">
+          <a href="../../projects/utm-shield/" class="btn btn--primary">View Project</a>
+          <a href="../../" class="btn btn--outline">Back to Home</a>
+        </div>
+      </div>
+    </section>
+
+    <script type="module" src="/src/blog/why-utm-tracking-breaks.js"></script>
+  </body>
+</html>
