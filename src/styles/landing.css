@@ -152,7 +152,7 @@
 }
 
 .layer-card:hover {
-  border-color: var(--accent);
+  border-color: var(--layer-color, var(--accent));
   box-shadow: var(--shadow);
 }
 
@@ -160,7 +160,7 @@
   font-family: var(--font-code);
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--layer-color, var(--accent));
   margin-bottom: var(--space-xs);
 }
 

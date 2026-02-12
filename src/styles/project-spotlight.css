@@ -65,13 +65,17 @@
   overflow: hidden;
   background: var(--bg-mid);
   border: 1px solid var(--border);
-  aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
   font-family: var(--font-code);
   font-size: 0.9rem;
+}
+
+.project-screenshot img {
+  width: 100%;
+  display: block;
 }
 
 /* ─── Project Sections ─── */
